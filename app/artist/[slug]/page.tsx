@@ -1,19 +1,22 @@
 import { notFound } from 'next/navigation';
+import { prisma } from '@/lib/prisma';
 
-// Mock function - replace with your actual database call
+// Get page data from database
 async function getPageBySlug(slug: string) {
-  // TODO: Replace with actual database query
-  // const page = await prisma.page.findUnique({ where: { slug } });
+  const page = await prisma.page.findUnique({
+    where: { slug },
+    include: {
+      links: { orderBy: { order: 'asc' } },
+      socialLinks: true,
+      customButtons: { orderBy: { order: 'asc' } },
+      featuredItems: { orderBy: { order: 'asc' } },
+      tracks: { orderBy: { order: 'asc' } },
+      events: { orderBy: { order: 'asc' } },
+      fullSets: { orderBy: { order: 'asc' } },
+    },
+  });
   
-  // For testing, return mock data
-  return {
-    slug,
-    displayName: 'Test Artist',
-    isPublished: true,
-    themeMode: 'dark',
-    themeColor: 'cyan',
-    coverPhotoUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f',
-  };
+  return page;
 }
 
 export default async function ArtistPage({ 

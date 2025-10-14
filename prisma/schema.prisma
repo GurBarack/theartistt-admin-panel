@@ -1,0 +1,128 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Page {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  displayName   String
+  isPublished   Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Theme settings
+  themeMode     String   @default("dark") // "dark" | "light"
+  themeColor    String   @default("cyan") // "cyan" | "purple" | "pink" | "blue" | "green" | "orange" | "red"
+  themeShape    String   @default("rounded") // "rounded" | "sharp" | "pill"
+  
+  // Cover photo
+  coverPhotoUrl String?
+  
+  // Content sections
+  links         Link[]
+  socialLinks   SocialLink[]
+  customButtons CustomButton[]
+  featuredItems FeaturedItem[]
+  tracks        Track[]
+  events        Event[]
+  fullSets      FullSet[]
+  
+  @@map("pages")
+}
+
+model Link {
+  id        String @id @default(cuid())
+  pageId    String
+  platform  String // "spotify" | "apple-music" | "soundcloud" | "beatport" | "youtube" | "youtube-music"
+  url       String
+  isVisible Boolean @default(true)
+  order     Int    @default(0)
+  
+  page      Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  @@map("links")
+}
+
+model SocialLink {
+  id       String @id @default(cuid())
+  pageId   String
+  platform String // "instagram" | "facebook" | "tiktok"
+  url      String
+  
+  page     Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  @@map("social_links")
+}
+
+model CustomButton {
+  id       String @id @default(cuid())
+  pageId   String
+  text     String
+  url      String
+  order    Int    @default(0)
+  
+  page     Page   @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  @@map("custom_buttons")
+}
+
+model FeaturedItem {
+  id        String  @id @default(cuid())
+  pageId    String
+  title     String
+  subtitle  String?
+  imageUrl  String?
+  ctaUrl    String?
+  order     Int     @default(0)
+  
+  page      Page    @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  @@map("featured_items")
+}
+
+model Track {
+  id         String  @id @default(cuid())
+  pageId     String
+  name       String
+  credits    String?
+  artworkUrl String?
+  order      Int     @default(0)
+  
+  page       Page    @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  @@map("tracks")
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  pageId    String
+  title     String
+  date      DateTime
+  location  String?
+  url       String?
+  order     Int      @default(0)
+  
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  @@map("events")
+}
+
+model FullSet {
+  id        String  @id @default(cuid())
+  pageId    String
+  title     String
+  url       String
+  order     Int     @default(0)
+  
+  page      Page    @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  @@map("full_sets")
+}
