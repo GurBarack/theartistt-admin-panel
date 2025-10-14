@@ -40,12 +40,12 @@ export function middleware(req: NextRequest) {
   // Handle www - redirect to root
   if (subdomain === 'www') {
     const newUrl = new URL(req.url);
-    newUrl.hostname = 'theartistt.com';
+    newUrl.hostname = hostname.replace('www.', '');
     return NextResponse.redirect(newUrl, 301);
   }
 
-  // Handle root domain (theartistt.com)
-  if (!subdomain || subdomain === 'theartistt') {
+  // Handle root domain (yourdomain.com)
+  if (!subdomain) {
     console.log('🏠 Routing to marketing page');
     if (url.pathname === '/') {
       return NextResponse.rewrite(new URL('/marketing', req.url));
