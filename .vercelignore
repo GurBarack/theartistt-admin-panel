@@ -41,4 +41,7 @@ build/
 # Logs
 *.log
 logs/
+
+# Force rebuild - 2024-10-14
+# Force rebuild - clear cache and fix routing conflict
 # Force rebuild - Tue Oct 14 14:39:09 PDT 2025

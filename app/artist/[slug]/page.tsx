@@ -19,9 +19,10 @@ async function getPageBySlug(slug: string) {
 export default async function ArtistPage({ 
   params 
 }: { 
-  params: { slug: string } 
+  params: Promise<{ slug: string }> 
 }) {
-  const page = await getPageBySlug(params.slug);
+  const { slug } = await params;
+  const page = await getPageBySlug(slug);
 
   if (!page || !page.isPublished) {
     notFound();
@@ -33,7 +34,7 @@ export default async function ArtistPage({
         <h1 className="text-5xl font-bold mb-4">{page.displayName}</h1>
         <p className="text-gray-400 mb-8">Welcome to my page!</p>
         <p className="text-sm text-gray-600">
-          Subdomain: {params.slug}.theartistt.com
+          Subdomain: {slug}.theartistt.com
         </p>
       </div>
     </div>
