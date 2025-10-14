@@ -36,25 +36,29 @@ export const sampleLandingData = {
       id: 'track-1',
       name: 'Midnight Vibes',
       credits: 'Produced by TheArtistt • Mixed by StudioX',
-      artworkUrl: '/images/album-midnight.jpg'
+      artworkUrl: '/images/album-midnight.jpg',
+      order: 0
     },
     {
       id: 'track-2',
       name: 'Summer Nights',
       credits: 'Feat. Vocalist • Remix by DJ Producer',
-      artworkUrl: '/images/album-summer.jpg'
+      artworkUrl: '/images/album-summer.jpg',
+      order: 1
     },
     {
       id: 'track-3',
       name: 'Deep House Sessions',
       credits: 'Live Recording • Club Mix',
-      artworkUrl: '/images/album-deep.jpg'
+      artworkUrl: '/images/album-deep.jpg',
+      order: 2
     },
     {
       id: 'track-4',
       name: 'Electronic Dreams',
       credits: 'Original Mix • Released 2024',
-      artworkUrl: '/images/album-dreams.jpg'
+      artworkUrl: '/images/album-dreams.jpg',
+      order: 3
     }
   ],
   events: [

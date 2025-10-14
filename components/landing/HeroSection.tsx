@@ -52,12 +52,12 @@ export function HeroSection({
   // Filter and order platform links for Row 1
   const row1Links = PLATFORM_ORDER_ROW1
     .map(platform => links.find(l => l.platform === platform && l.isVisible))
-    .filter(Boolean);
+    .filter((link): link is NonNullable<typeof link> => Boolean(link));
 
   // Filter and order social links for Row 2
   const row2Links = PLATFORM_ORDER_ROW2
     .map(platform => socialLinks.find(l => l.platform === platform))
-    .filter(Boolean);
+    .filter((social): social is NonNullable<typeof social> => Boolean(social));
 
   return (
     <section className="relative min-h-screen flex items-end justify-center pb-12 sm:pb-16 lg:pb-20">

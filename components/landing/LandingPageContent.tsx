@@ -29,6 +29,7 @@ interface LandingPageData {
     name: string;
     credits?: string;
     artworkUrl: string;
+    order: number;
   }>;
   events: Array<{
     id: string;
