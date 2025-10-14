@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Music Landing Page Admin Panel
+
+A comprehensive admin panel for building music landing pages (link-in-bio platform for musicians). Users can manage content, customize themes, and preview changes in real-time on a mobile mockup.
+
+## Features
+
+- **Content Management**: Cover photos, links, social media, custom buttons, featured items, tracks, events, and full sets
+- **Theme Customization**: Color schemes, dark/light mode, and cover photo shapes
+- **Real-time Preview**: Mobile mockup that updates as you make changes
+- **Drag & Drop**: Reorder links and content sections
+- **Draft System**: Track unpublished changes with visual indicators
+
+## Tech Stack
+
+- **Next.js 14** (App Router) + TypeScript
+- **Tailwind CSS** for styling
+- **Shadcn/ui + Radix UI** for components
+- **Zustand** for state management
+- **@dnd-kit** for drag and drop functionality
+- **React Hook Form + Zod** for form handling
+- **TanStack Query** for API calls
+- **Lucide React** for icons
 
 ## Getting Started
 
-First, run the development server:
-
+1. Install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Run the development server:
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+app/
+├── (dashboard)/
+│   └── admin/
+│       ├── layout.tsx
+│       ├── page.tsx
+│       └── editor/
+│           └── page.tsx
+├── layout.tsx
+└── page.tsx
 
-To learn more about Next.js, take a look at the following resources:
+components/
+├── ui/                           # Shadcn components
+├── admin/
+│   ├── Sidebar.tsx
+│   ├── DraftIndicator.tsx
+│   ├── content-sections/         # Content management sections
+│   ├── theme-sections/           # Theme customization
+│   └── preview/
+│       └── MobilePreview.tsx
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+stores/
+└── pageStore.ts                  # Zustand store
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+types/
+└── index.ts                      # TypeScript definitions
+```
 
-## Deploy on Vercel
+## Usage
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Content Tab**: Manage all your content sections
+   - Upload cover photos
+   - Add and reorder platform links
+   - Configure social media links
+   - Create custom buttons
+   - Add featured items, tracks, events, and full sets
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. **Theme Tab**: Customize the appearance
+   - Choose color schemes
+   - Toggle between dark and light modes
+   - Select cover photo shapes
+
+3. **Preview**: See real-time changes in the mobile mockup
+
+## Development Notes
+
+- All sections follow a consistent pattern with accordion layouts
+- Draft state is managed globally and persists until changes are saved
+- Drag and drop is implemented using @dnd-kit
+- API integration points are marked with TODO comments
+- The mobile preview updates automatically based on store changes
+
+## Future Enhancements
+
+- Backend API integration
+- Image upload functionality
+- User authentication
+- Multiple page management
+- Analytics dashboard
+- Export functionality
