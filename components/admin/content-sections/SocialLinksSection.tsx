@@ -30,7 +30,7 @@ export function SocialLinksSection() {
         {
           id: `temp-${Date.now()}`,
           pageId: '',
-          platform: platform as any,
+          platform: platform as 'instagram' | 'facebook' | 'tiktok',
           url,
         },
       ];

@@ -30,7 +30,7 @@ export function LinksSection() {
       link: existingLink || {
         id: `temp-${platform.id}-${Date.now()}`,
         pageId: '',
-        platform: platform.id as any,
+        platform: platform.id as 'spotify' | 'apple-music' | 'soundcloud' | 'beatport' | 'youtube' | 'youtube-music',
         url: '',
         isVisible: true,
         order: links.length + PLATFORMS.indexOf(platform),

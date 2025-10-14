@@ -80,7 +80,7 @@ export function FileUpload({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onFileSelect(null as any);
+                onFileSelect(null as unknown as File);
               }}
               className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition-colors"
             >
