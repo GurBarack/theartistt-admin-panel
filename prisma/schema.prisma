@@ -18,6 +18,10 @@ model Page {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   
+  // Artist info
+  genre         String?  // "electronic" | "hip-hop" | "rock" | "pop" | etc.
+  bio           String?  // Artist bio/description
+  
   // Theme settings
   themeMode     String   @default("dark") // "dark" | "light"
   themeColor    String   @default("cyan") // "cyan" | "purple" | "pink" | "blue" | "green" | "orange" | "red"
