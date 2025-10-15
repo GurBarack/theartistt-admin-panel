@@ -2,17 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const config = {
   matcher: [
-    /*
-     * Match all paths except:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization)
-     * - favicon.ico
-     * - onboarding (onboarding routes)
-     * - admin (admin routes)
-     * - marketing (marketing routes)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|onboarding|admin|marketing).*)',
+    // Temporarily disable middleware to test onboarding
+    // '/((?!api|_next/static|_next/image|favicon.ico|onboarding|admin|marketing).*)',
   ],
 };
 
