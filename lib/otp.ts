@@ -38,37 +38,19 @@ export async function sendOTPEmail(email: string, otp: string): Promise<boolean>
     const mailOptions = {
       from: process.env.EMAIL_FROM || 'noreply@theartistt.com',
       to: email,
-      subject: 'Your The Artist Verification Code',
+      subject: 'Your Verification Code - The Artist',
+      text: `Your verification code is: ${otp}\n\nThis code expires in 10 minutes.\n\nIf you didn't request this code, you can safely ignore this email.`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="color: #06b6d4; font-size: 32px; margin: 0;">🎵 The Artist</h1>
-            <p style="color: #6b7280; font-size: 18px; margin: 10px 0 0 0;">Your Music, Your Brand, One Link</p>
-          </div>
-          
-          <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 16px; padding: 40px; text-align: center; margin-bottom: 30px;">
-            <h2 style="color: white; font-size: 24px; margin: 0 0 20px 0;">Verify Your Account</h2>
-            <p style="color: #94a3b8; font-size: 16px; margin: 0 0 30px 0;">
-              Enter this 6-digit code to complete your account setup:
-            </p>
-            
-            <div style="background: #1e293b; border: 2px solid #06b6d4; border-radius: 12px; padding: 20px; margin: 20px 0;">
-              <div style="font-size: 36px; font-weight: bold; color: #06b6d4; letter-spacing: 8px; font-family: monospace;">
-                ${otp}
-              </div>
+          <h2>Your Verification Code</h2>
+          <p>Enter this 6-digit code to complete your account setup:</p>
+          <div style="background: #f5f5f5; border: 2px solid #333; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: #333; letter-spacing: 4px; font-family: monospace;">
+              ${otp}
             </div>
-            
-            <p style="color: #94a3b8; font-size: 14px; margin: 20px 0 0 0;">
-              This code expires in 10 minutes
-            </p>
           </div>
-          
-          <div style="text-align: center; color: #6b7280; font-size: 14px;">
-            <p>If you didn't request this code, you can safely ignore this email.</p>
-            <p style="margin-top: 20px;">
-              <a href="https://theartistt.com" style="color: #06b6d4; text-decoration: none;">Visit The Artist</a>
-            </p>
-          </div>
+          <p style="color: #666; font-size: 14px;">This code expires in 10 minutes.</p>
+          <p style="color: #666; font-size: 14px;">If you didn't request this code, you can safely ignore this email.</p>
         </div>
       `,
     };

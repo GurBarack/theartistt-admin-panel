@@ -95,9 +95,14 @@ export function Step4Visual() {
         <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-700">
           <FileUpload
             onFileSelect={(file) => {
-              // Convert file to URL for now (in real app, upload to storage)
-              const url = URL.createObjectURL(file);
-              handleImageUpload(url);
+              if (file === null) {
+                // Handle deletion
+                handleImageUpload('');
+              } else {
+                // Convert file to URL for now (in real app, upload to storage)
+                const url = URL.createObjectURL(file);
+                handleImageUpload(url);
+              }
             }}
             currentImageUrl={coverPhotoUrl}
             className="w-full h-48"

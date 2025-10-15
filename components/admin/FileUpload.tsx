@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { Upload, X } from 'lucide-react';
 
 interface FileUploadProps {
-  onFileSelect: (file: File) => void;
+  onFileSelect: (file: File | null) => void;
   currentImageUrl?: string;
   placeholder?: string;
   aspectRatio?: string;
@@ -20,8 +20,10 @@ export function FileUpload({
 }: FileUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
 
-  const handleFileSelect = useCallback((file: File) => {
-    if (file && file.type.startsWith('image/')) {
+  const handleFileSelect = useCallback((file: File | null) => {
+    if (file === null) {
+      onFileSelect(null);
+    } else if (file && file.type.startsWith('image/')) {
       onFileSelect(file);
     }
   }, [onFileSelect]);
@@ -80,7 +82,7 @@ export function FileUpload({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onFileSelect(null as unknown as File);
+                handleFileSelect(null);
               }}
               className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700 transition-colors"
             >
