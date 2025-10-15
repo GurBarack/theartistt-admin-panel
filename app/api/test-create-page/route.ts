@@ -6,7 +6,7 @@ export async function POST() {
     // Create a test page in the database
     const page = await prisma.page.create({
       data: {
-        slug: 'test-artist',
+        slug: 'demo-artist',
         displayName: 'Test Artist',
         isPublished: true,
         themeMode: 'dark',

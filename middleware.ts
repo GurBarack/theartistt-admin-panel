@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const config = {
   matcher: [
-    // Temporarily disable middleware to test onboarding
-    // '/((?!api|_next/static|_next/image|favicon.ico|onboarding|admin|marketing).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|onboarding|admin|marketing).*)',
   ],
 };
 
@@ -56,8 +55,13 @@ function getSubdomain(hostname: string): string | null {
   // Remove port
   const host = hostname.split(':')[0];
   
-  // For localhost/127.0.0.1
+  // For localhost development, check for subdomain pattern
   if (host.includes('localhost') || host.includes('127.0.0.1')) {
+    // Check if it's a subdomain pattern like artist.localhost:3000
+    const parts = host.split('.');
+    if (parts.length >= 2 && parts[0] !== 'www') {
+      return parts[0];
+    }
     return null;
   }
 
