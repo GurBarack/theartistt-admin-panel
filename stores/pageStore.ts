@@ -180,17 +180,22 @@ export const usePageStore = create<PageState>()(
   setIsLoading: (isLoading) => set({ isLoading }),
 
   loadPageFromDatabase: async (userEmail: string, pageId?: string) => {
+    console.log('🔄 Loading page from database for user:', userEmail);
     set({ isLoading: true });
     try {
       const url = pageId 
         ? `/api/pages/load?userEmail=${encodeURIComponent(userEmail)}&pageId=${pageId}`
         : `/api/pages/load?userEmail=${encodeURIComponent(userEmail)}`;
       
+      console.log('📡 Making API call to:', url);
       const response = await fetch(url);
       const data = await response.json();
       
+      console.log('📊 API response:', data);
+      
       if (data.success && data.page) {
         const page = data.page;
+        console.log('✅ Loading page data:', page.displayName);
         set({
           page: {
             id: page.id,
@@ -211,9 +216,11 @@ export const usePageStore = create<PageState>()(
           fullSets: page.fullSets || [],
           isDraft: false,
         });
+      } else {
+        console.error('❌ Failed to load page:', data.error);
       }
     } catch (error) {
-      console.error('Error loading page from database:', error);
+      console.error('❌ Error loading page from database:', error);
     } finally {
       set({ isLoading: false });
     }

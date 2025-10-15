@@ -23,15 +23,24 @@ import { Save, Loader2 } from 'lucide-react';
 
 export default function EditorPage() {
   const [activeTab, setActiveTab] = useState<'content' | 'theme'>('content');
-  const { isDraft, isLoading, loadPageFromDatabase, savePageToDatabase } = usePageStore();
+  const { page, isDraft, isLoading, loadPageFromDatabase, savePageToDatabase } = usePageStore();
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
   // Load user email and page data on mount
   useEffect(() => {
     const email = localStorage.getItem('userEmail');
+    console.log('🔍 Admin Editor - User email from localStorage:', email);
     if (email) {
       setUserEmail(email);
+      console.log('🔄 Admin Editor - Loading page data...');
       loadPageFromDatabase(email);
+    } else {
+      console.log('❌ Admin Editor - No user email found in localStorage');
+      // For testing, set the email manually
+      const testEmail = 'gurbarack1@gmail.com';
+      console.log('🧪 Admin Editor - Using test email:', testEmail);
+      setUserEmail(testEmail);
+      loadPageFromDatabase(testEmail);
     }
   }, [loadPageFromDatabase]);
 
@@ -51,7 +60,14 @@ export default function EditorPage() {
       {/* Left Panel - Editor */}
       <div className="w-full lg:w-[60%] xl:w-[65%] overflow-y-auto bg-gray-900 p-4 lg:p-6">
         <div className="mb-4 lg:mb-6 flex justify-between items-center">
-          <h1 className="text-xl lg:text-2xl font-bold text-white">Admin Panel</h1>
+          <div>
+            <h1 className="text-xl lg:text-2xl font-bold text-white">Admin Panel</h1>
+            {page && (
+              <p className="text-sm text-gray-400 mt-1">
+                Editing: {page.displayName} ({page.slug})
+              </p>
+            )}
+          </div>
           <Button 
             onClick={handleSave}
             disabled={isLoading || !isDraft}
