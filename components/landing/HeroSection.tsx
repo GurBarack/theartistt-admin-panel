@@ -65,7 +65,7 @@ export function HeroSection({
       {coverPhotoUrl ? (
         <Image
           src={coverPhotoUrl}
-          alt={displayName}
+          alt={displayName || 'Artist cover photo'}
           fill
           priority
           className="object-cover object-center"

@@ -72,7 +72,7 @@ export function FeaturedSection({ items, accentColor, onItemClick }: FeaturedSec
         >
           <Image
             src={items[0].imageUrl}
-            alt={items[0].title}
+            alt={items[0].title || 'Featured item'}
             fill
             className="object-cover"
           />
@@ -115,7 +115,7 @@ export function FeaturedSection({ items, accentColor, onItemClick }: FeaturedSec
             >
               <Image
                 src={item.imageUrl}
-                alt={item.title}
+                alt={item.title || 'Featured item'}
                 fill
                 className="object-cover"
               />

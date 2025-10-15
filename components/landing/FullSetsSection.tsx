@@ -55,7 +55,7 @@ export function FullSetsSection({ sets, onSeeAll, onCardClick }: FullSetsSection
             {set.thumbnailUrl ? (
               <Image
                 src={set.thumbnailUrl}
-                alt={set.name}
+                alt={set.name || 'Full set'}
                 fill
                 className="object-cover"
               />

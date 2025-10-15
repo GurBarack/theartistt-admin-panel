@@ -47,7 +47,7 @@ export function ReleasedSection({ tracks, onSeeAll, onTrackClick }: ReleasedSect
               {track.artworkUrl ? (
                 <Image
                   src={track.artworkUrl}
-                  alt={track.name}
+                  alt={track.name || 'Track artwork'}
                   fill
                   className="rounded-lg sm:rounded-xl object-cover"
                   onError={(e) => {
