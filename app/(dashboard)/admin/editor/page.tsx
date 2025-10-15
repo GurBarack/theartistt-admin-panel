@@ -36,13 +36,13 @@ export default function EditorPage() {
       loadPageFromDatabase(email);
     } else {
       console.log('❌ Admin Editor - No user email found in localStorage');
-      // For testing, set the email manually and load the gurbaa page
-      const testEmail = 'gurbarack1@gmail.com';
-      const gurbaaPageId = 'cmgskf21t0007uyx7htlmjdkr';
+      // For testing, set the email manually and load the gurba page
+      const testEmail = 'gurrbb@gmail.com';
+      const gurbaPageId = 'cmgsn8jiq002auy4yx5jn3aog';
       console.log('🧪 Admin Editor - Using test email:', testEmail);
-      console.log('🧪 Admin Editor - Loading gurbaa page:', gurbaaPageId);
+      console.log('🧪 Admin Editor - Loading gurba page:', gurbaPageId);
       setUserEmail(testEmail);
-      loadPageFromDatabase(testEmail, gurbaaPageId);
+      loadPageFromDatabase(testEmail, gurbaPageId);
     }
   }, [loadPageFromDatabase]);
 
