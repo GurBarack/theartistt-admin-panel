@@ -54,7 +54,9 @@ export function Step5Review() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create page');
+        const errorData = await response.json();
+        console.error('API Error:', errorData);
+        throw new Error(`Failed to create page: ${errorData.error || 'Unknown error'}`);
       }
 
       const result = await response.json();

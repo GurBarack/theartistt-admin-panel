@@ -4,6 +4,13 @@ import { prisma } from '@/lib/prisma';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    console.log('📝 Onboarding completion request:', { 
+      email: body.email, 
+      name: body.name, 
+      artistName: body.artistName, 
+      subdomain: body.subdomain 
+    });
+    
     const { 
       email,
       name,
@@ -20,6 +27,7 @@ export async function POST(req: NextRequest) {
 
     // Validate required fields
     if (!email || !name || !artistName || !subdomain) {
+      console.error('❌ Missing required fields:', { email, name, artistName, subdomain });
       return NextResponse.json(
         { error: 'Email, name, artist name and subdomain are required' },
         { status: 400 }
@@ -41,12 +49,13 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Check if slug is already taken
+    // Check if subdomain is already taken
     const existingPage = await prisma.page.findUnique({
-      where: { slug },
+      where: { slug: subdomain },
     });
 
     if (existingPage) {
+      console.error('❌ Subdomain already taken:', subdomain);
       return NextResponse.json(
         { error: 'This subdomain is already taken' },
         { status: 400 }
@@ -54,6 +63,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Create the page
+    console.log('🔄 Creating page for user:', user.id, 'with subdomain:', subdomain);
     const page = await prisma.page.create({
       data: {
         userId: user.id,
@@ -67,6 +77,7 @@ export async function POST(req: NextRequest) {
         isPublished: true,
       },
     });
+    console.log('✅ Page created successfully:', page.id);
 
     // Create social links
     if (socialLinks) {
@@ -101,7 +112,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       page,
-      url: `https://${slug}.theartistt.com`,
+      url: `https://${subdomain}.theartistt.com`,
     });
   } catch (error) {
     console.error('Onboarding completion error:', error);
