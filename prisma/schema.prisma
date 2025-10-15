@@ -19,10 +19,25 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   
+  // OTP verification
+  otpSecret     String?
+  otpVerified   Boolean  @default(false)
+  
   // User's pages
   pages         Page[]
   
   @@map("users")
+}
+
+model OtpVerification {
+  id        String   @id @default(cuid())
+  email     String
+  otpCode   String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  verified  Boolean  @default(false)
+  
+  @@map("otp_verifications")
 }
 
 model Page {

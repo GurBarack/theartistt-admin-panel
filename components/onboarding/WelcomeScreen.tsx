@@ -19,10 +19,10 @@ export function WelcomeScreen() {
           Welcome to The Artist
         </h1>
         <p className="text-2xl text-gray-300 mb-2">
-          Let's discover the artist you are
+          Let&apos;s discover the artist you are
         </p>
         <p className="text-gray-400 text-lg">
-          In just 5 minutes, we'll create your personalized music page that connects
+          In just 5 minutes, we&apos;ll create your personalized music page that connects
           everything you do in one place.
         </p>
       </div>
