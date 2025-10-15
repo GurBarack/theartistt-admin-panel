@@ -2,6 +2,7 @@
 
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { WelcomeScreen } from '@/components/onboarding/WelcomeScreen';
+import { Step0Account } from '@/components/onboarding/Step0Account';
 import { Step1Identity } from '@/components/onboarding/Step1Identity';
 import { Step2Sound } from '@/components/onboarding/Step2Sound';
 import { Step3Platforms } from '@/components/onboarding/Step3Platforms';
@@ -26,20 +27,21 @@ export default function OnboardingPage() {
         {currentStep > 0 && (
           <>
             {/* Progress Bar */}
-            <OnboardingProgress currentStep={currentStep} totalSteps={5} />
+            <OnboardingProgress currentStep={currentStep} totalSteps={6} />
 
             {/* Step Content */}
             <div className="bg-gray-800/50 backdrop-blur-xl rounded-3xl p-8 mt-8 border border-gray-700 shadow-2xl">
-              {currentStep === 1 && <Step1Identity />}
-              {currentStep === 2 && <Step2Sound />}
-              {currentStep === 3 && <Step3Platforms />}
-              {currentStep === 4 && <Step4Visual />}
-              {currentStep === 5 && <Step5Review />}
+              {currentStep === 1 && <Step0Account />}
+              {currentStep === 2 && <Step1Identity />}
+              {currentStep === 3 && <Step2Sound />}
+              {currentStep === 4 && <Step3Platforms />}
+              {currentStep === 5 && <Step4Visual />}
+              {currentStep === 6 && <Step5Review />}
             </div>
 
             {/* Footer */}
             <p className="text-center text-gray-500 text-sm mt-6">
-              Step {currentStep} of 5 • Takes about 5 minutes
+              Step {currentStep} of 6 • Takes about 5 minutes
             </p>
           </>
         )}

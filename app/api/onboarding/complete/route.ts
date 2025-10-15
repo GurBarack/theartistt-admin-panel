@@ -5,6 +5,8 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { 
+      email,
+      name,
       artistName, 
       slug, 
       genre, 
@@ -17,11 +19,26 @@ export async function POST(req: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!artistName || !slug) {
+    if (!email || !name || !artistName || !slug) {
       return NextResponse.json(
-        { error: 'Artist name and slug are required' },
+        { error: 'Email, name, artist name and slug are required' },
         { status: 400 }
       );
+    }
+
+    // Check if user already exists
+    let user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    // Create user if doesn't exist
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          email,
+          name,
+        },
+      });
     }
 
     // Check if slug is already taken
@@ -39,6 +56,7 @@ export async function POST(req: NextRequest) {
     // Create the page
     const page = await prisma.page.create({
       data: {
+        userId: user.id,
         slug,
         displayName: artistName,
         genre: genre || '',

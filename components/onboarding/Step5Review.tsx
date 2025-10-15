@@ -32,6 +32,8 @@ export function Step5Review() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          email: data.email,
+          name: data.name,
           artistName: data.artistName,
           slug: data.slug,
           genre: data.genre,

@@ -2,6 +2,10 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface OnboardingData {
+  // User info
+  email: string;
+  name: string;
+  
   // Step 1
   artistName: string;
   slug: string;
@@ -49,6 +53,8 @@ export const useOnboardingStore = create<OnboardingState>()(
     (set) => ({
       currentStep: 0,
       data: {
+        email: '',
+        name: '',
         artistName: '',
         slug: '',
         genre: '',
@@ -69,7 +75,7 @@ export const useOnboardingStore = create<OnboardingState>()(
       
       nextStep: () =>
         set((state) => ({
-          currentStep: Math.min(state.currentStep + 1, 5),
+          currentStep: Math.min(state.currentStep + 1, 6),
         })),
       
       prevStep: () =>
@@ -83,6 +89,8 @@ export const useOnboardingStore = create<OnboardingState>()(
         set({
           currentStep: 0,
           data: {
+            email: '',
+            name: '',
             artistName: '',
             slug: '',
             genre: '',
