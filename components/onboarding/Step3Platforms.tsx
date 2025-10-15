@@ -44,8 +44,8 @@ export function Step3Platforms() {
           [platformId]: { 
             connected: true, 
             tracks: [
-              { name: 'Sample Track 1', artworkUrl: '/placeholder-album.jpg' },
-              { name: 'Sample Track 2', artworkUrl: '/placeholder-album.jpg' },
+              { name: 'Sample Track 1', artworkUrl: '/placeholder-album.svg' },
+              { name: 'Sample Track 2', artworkUrl: '/placeholder-album.svg' },
             ]
           },
         },

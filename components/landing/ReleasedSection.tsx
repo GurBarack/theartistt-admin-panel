@@ -50,12 +50,16 @@ export function ReleasedSection({ tracks, onSeeAll, onTrackClick }: ReleasedSect
                   alt={track.name}
                   fill
                   className="rounded-lg sm:rounded-xl object-cover"
+                  onError={(e) => {
+                    // Hide the image and show fallback
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                  }}
                 />
-              ) : (
-                <div className="w-full h-full bg-gray-800 rounded-lg sm:rounded-xl flex items-center justify-center">
-                  <span className="text-gray-500 text-xs">No Image</span>
-                </div>
-              )}
+              ) : null}
+              <div className={`w-full h-full bg-gray-800 rounded-lg sm:rounded-xl flex items-center justify-center ${track.artworkUrl ? 'hidden' : ''}`}>
+                <span className="text-gray-500 text-xs">No Image</span>
+              </div>
             </div>
 
             {/* Track Info */}
