@@ -30,11 +30,15 @@ export function HeroSection() {
   };
 
   const handleArtistNameChange = (value: string) => {
-    setArtistName(value);
-    const newSlug = generateSlug(value);
-    setSlug(newSlug);
-    setHasChanges(true);
-    setIsDraft(true);
+    // Artist name cannot be changed after creation
+    // Only allow if it's empty (initial state)
+    if (!page?.displayName || artistName === '') {
+      setArtistName(value);
+      const newSlug = generateSlug(value);
+      setSlug(newSlug);
+      setHasChanges(true);
+      setIsDraft(true);
+    }
   };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -102,21 +106,37 @@ export function HeroSection() {
             {/* Artist Name Field */}
             <div>
               <Label htmlFor="artistName" className="block text-sm font-medium text-gray-300 mb-2">
-                Artist Name
+                Artist Name {page?.displayName && (
+                  <span className="text-xs text-cyan-400 ml-2 flex items-center gap-1">
+                    <Lock className="w-3 h-3" />
+                    Locked
+                  </span>
+                )}
               </Label>
-              <Input
-                id="artistName"
-                value={artistName}
-                onChange={(e) => handleArtistNameChange(e.target.value)}
-                placeholder="Enter artist name"
-                className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-              />
+              <div className="relative">
+                <Input
+                  id="artistName"
+                  value={artistName}
+                  onChange={(e) => handleArtistNameChange(e.target.value)}
+                  placeholder="Enter artist name"
+                  className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+                  disabled={!!page?.displayName}
+                />
+                {page?.displayName && (
+                  <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                )}
+              </div>
+              {page?.displayName && (
+                <p className="text-xs text-gray-500 mt-1">
+                  Artist name cannot be changed after creation
+                </p>
+              )}
             </div>
 
-            {/* Slug Field (Auto-generated, locked) */}
+            {/* Subdomain Field (Auto-generated, locked) */}
             <div>
               <Label htmlFor="slug" className="block text-sm font-medium text-gray-300 mb-2">
-                Slug (Auto-generated)
+                Subdomain (Auto-generated)
               </Label>
               <div className="relative">
                 <Input
@@ -128,7 +148,7 @@ export function HeroSection() {
                 <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                Your page URL: yoursite.com/{slug || 'artist-name'}
+                Your page URL: {slug || 'artist-name'}.theartistt.com
               </p>
             </div>
 

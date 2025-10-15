@@ -8,7 +8,7 @@ interface OnboardingData {
   
   // Step 1
   artistName: string;
-  slug: string;
+  subdomain: string;
   
   // Step 2
   genre: string;
@@ -56,7 +56,7 @@ export const useOnboardingStore = create<OnboardingState>()(
         email: '',
         name: '',
         artistName: '',
-        slug: '',
+        subdomain: '',
         genre: '',
         bio: '',
         connectedPlatforms: {},

@@ -35,7 +35,7 @@ export function Step5Review() {
           email: data.email,
           name: data.name,
           artistName: data.artistName,
-          slug: data.slug,
+          subdomain: data.subdomain,
           genre: data.genre,
           bio: data.bio,
           themeColor: data.themeColor,
@@ -186,7 +186,7 @@ export function Step5Review() {
           </div>
         </div>
         <p className="text-cyan-400 text-sm mt-2 font-mono">
-          {data.slug}.theartistt.com
+          {data.subdomain}.theartistt.com
         </p>
       </div>
 

@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
       email,
       name,
       artistName, 
-      slug, 
+      subdomain, 
       genre, 
       bio, 
       themeColor, 
@@ -19,9 +19,9 @@ export async function POST(req: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!email || !name || !artistName || !slug) {
+    if (!email || !name || !artistName || !subdomain) {
       return NextResponse.json(
-        { error: 'Email, name, artist name and slug are required' },
+        { error: 'Email, name, artist name and subdomain are required' },
         { status: 400 }
       );
     }
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     const page = await prisma.page.create({
       data: {
         userId: user.id,
-        slug,
+        slug: subdomain,
         displayName: artistName,
         genre: genre || '',
         bio: bio || '',

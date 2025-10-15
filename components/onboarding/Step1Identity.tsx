@@ -10,23 +10,31 @@ import { Check, X, Loader2 } from 'lucide-react';
 export function Step1Identity() {
   const { data, updateData, nextStep } = useOnboardingStore();
   const [artistName, setArtistName] = useState(data.artistName);
-  const [slug, setSlug] = useState(data.slug);
+  const [subdomain, setSubdomain] = useState(data.subdomain);
   const [isChecking, setIsChecking] = useState(false);
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
+  const [isArtistNameLocked, setIsArtistNameLocked] = useState(false);
 
-  // Generate slug from artist name
+  // Generate subdomain from artist name
   useEffect(() => {
-    const newSlug = artistName
+    const newSubdomain = artistName
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
-    setSlug(newSlug);
+    setSubdomain(newSubdomain);
   }, [artistName]);
+
+  // Lock artist name after first input
+  useEffect(() => {
+    if (artistName && !isArtistNameLocked) {
+      setIsArtistNameLocked(true);
+    }
+  }, [artistName, isArtistNameLocked]);
 
   // Check subdomain availability
   useEffect(() => {
     const checkAvailability = async () => {
-      if (slug.length < 3) {
+      if (subdomain.length < 3) {
         setIsAvailable(null);
         return;
       }
@@ -34,7 +42,7 @@ export function Step1Identity() {
       setIsChecking(true);
       
       try {
-        const response = await fetch(`/api/check-subdomain?slug=${slug}`);
+        const response = await fetch(`/api/check-subdomain?slug=${subdomain}`);
         const data = await response.json();
         setIsAvailable(data.available);
       } catch (error) {
@@ -46,11 +54,11 @@ export function Step1Identity() {
 
     const debounce = setTimeout(checkAvailability, 500);
     return () => clearTimeout(debounce);
-  }, [slug]);
+  }, [subdomain]);
 
   const handleNext = () => {
     if (artistName.length >= 3 && isAvailable) {
-      updateData({ artistName, slug });
+      updateData({ artistName, subdomain });
       nextStep();
     }
   };
@@ -76,19 +84,28 @@ export function Step1Identity() {
           placeholder="Enter your artist name"
           className="text-lg h-14 bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
           maxLength={30}
+          disabled={isArtistNameLocked}
         />
-        <p className="text-xs text-gray-500 mt-1">
-          {artistName.length}/30 characters
-        </p>
+        <div className="flex justify-between items-center mt-1">
+          <p className="text-xs text-gray-500">
+            {artistName.length}/30 characters
+          </p>
+          {isArtistNameLocked && (
+            <p className="text-xs text-cyan-400 flex items-center gap-1">
+              <Check className="w-3 h-3" />
+              Locked
+            </p>
+          )}
+        </div>
       </div>
 
-      {/* Slug Preview */}
-      {slug && (
+      {/* Subdomain Preview */}
+      {subdomain && (
         <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-700">
-          <p className="text-sm text-gray-400 mb-2">Your page will be:</p>
+          <p className="text-sm text-gray-400 mb-2">Your subdomain will be:</p>
           <div className="flex items-center gap-2">
             <p className="text-cyan-400 font-mono text-lg">
-              {slug}.theartistt.com
+              {subdomain}.theartistt.com
             </p>
             {isChecking && <Loader2 className="w-4 h-4 animate-spin text-gray-400" />}
             {!isChecking && isAvailable === true && (
@@ -100,12 +117,12 @@ export function Step1Identity() {
           </div>
           {!isChecking && isAvailable === false && (
             <p className="text-red-400 text-sm mt-2">
-              This name is already taken. Try another one.
+              This subdomain is already taken. Try another one.
             </p>
           )}
           {!isChecking && isAvailable === true && (
             <p className="text-green-400 text-sm mt-2">
-              ✓ This name is available!
+              ✓ This subdomain is available!
             </p>
           )}
         </div>
