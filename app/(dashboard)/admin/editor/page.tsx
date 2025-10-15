@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import { HeroSection } from '@/components/admin/content-sections/HeroSection';
 import { SectionReorder } from '@/components/admin/content-sections/SectionReorder';
 import { CoverPhotoSection } from '@/components/admin/content-sections/CoverPhotoSection';
@@ -18,17 +19,56 @@ import { ShapeSelector } from '@/components/admin/theme-sections/ShapeSelector';
 import { MobilePreview } from '@/components/admin/preview/MobilePreview';
 import { DraftIndicator } from '@/components/admin/DraftIndicator';
 import { usePageStore } from '@/stores/pageStore';
+import { Save, Loader2 } from 'lucide-react';
 
 export default function EditorPage() {
   const [activeTab, setActiveTab] = useState<'content' | 'theme'>('content');
-  const { isDraft } = usePageStore();
+  const { isDraft, isLoading, loadPageFromDatabase, savePageToDatabase } = usePageStore();
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  // Load user email and page data on mount
+  useEffect(() => {
+    const email = localStorage.getItem('userEmail');
+    if (email) {
+      setUserEmail(email);
+      loadPageFromDatabase(email);
+    }
+  }, [loadPageFromDatabase]);
+
+  const handleSave = async () => {
+    if (!userEmail) return;
+    
+    const success = await savePageToDatabase(userEmail);
+    if (success) {
+      alert('Page saved successfully!');
+    } else {
+      alert('Failed to save page. Please try again.');
+    }
+  };
 
   return (
     <div className="flex flex-col lg:flex-row h-screen overflow-hidden">
       {/* Left Panel - Editor */}
       <div className="w-full lg:w-[60%] xl:w-[65%] overflow-y-auto bg-gray-900 p-4 lg:p-6">
-        <div className="mb-4 lg:mb-6">
-          <h1 className="text-xl lg:text-2xl font-bold text-white mb-2">Admin Panel</h1>
+        <div className="mb-4 lg:mb-6 flex justify-between items-center">
+          <h1 className="text-xl lg:text-2xl font-bold text-white">Admin Panel</h1>
+          <Button 
+            onClick={handleSave}
+            disabled={isLoading || !isDraft}
+            className="bg-cyan-500 hover:bg-cyan-600 text-white"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="w-4 h-4 mr-2" />
+                Save Changes
+              </>
+            )}
+          </Button>
         </div>
 
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'content' | 'theme')}>

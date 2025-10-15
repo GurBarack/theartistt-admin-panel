@@ -13,6 +13,7 @@ interface PageState {
   fullSets: FullSet[];
   sectionOrder: Section[] | null;
   isDraft: boolean;
+  isLoading: boolean;
   
   // Actions
   setPage: (page: Page) => void;
@@ -28,6 +29,9 @@ interface PageState {
   setFullSets: (sets: FullSet[]) => void;
   setSectionOrder: (sections: Section[]) => void;
   setIsDraft: (isDraft: boolean) => void;
+  setIsLoading: (isLoading: boolean) => void;
+  loadPageFromDatabase: (userEmail: string, pageId?: string) => Promise<void>;
+  savePageToDatabase: (userEmail: string) => Promise<boolean>;
 }
 
 export const usePageStore = create<PageState>()(
@@ -136,6 +140,7 @@ export const usePageStore = create<PageState>()(
   fullSets: [],
   sectionOrder: null,
   isDraft: false,
+  isLoading: false,
 
   setPage: (page) => set({ page }),
   setLinks: (links) => set({ links, isDraft: true }),
@@ -172,6 +177,91 @@ export const usePageStore = create<PageState>()(
   setFullSets: (fullSets) => set({ fullSets, isDraft: true }),
   setSectionOrder: (sections) => set({ sectionOrder: sections, isDraft: true }),
   setIsDraft: (isDraft) => set({ isDraft }),
+  setIsLoading: (isLoading) => set({ isLoading }),
+
+  loadPageFromDatabase: async (userEmail: string, pageId?: string) => {
+    set({ isLoading: true });
+    try {
+      const url = pageId 
+        ? `/api/pages/load?userEmail=${encodeURIComponent(userEmail)}&pageId=${pageId}`
+        : `/api/pages/load?userEmail=${encodeURIComponent(userEmail)}`;
+      
+      const response = await fetch(url);
+      const data = await response.json();
+      
+      if (data.success && data.page) {
+        const page = data.page;
+        set({
+          page: {
+            id: page.id,
+            slug: page.slug,
+            displayName: page.displayName,
+            themeColor: page.themeColor,
+            themeMode: page.themeMode,
+            isPublished: page.isPublished,
+            isDraft: false,
+            coverPhotoUrl: page.coverPhotoUrl,
+          },
+          links: page.links || [],
+          socialLinks: page.socialLinks || [],
+          customButtons: page.customButtons || [],
+          featuredItems: page.featuredItems || [],
+          tracks: page.tracks || [],
+          events: page.events || [],
+          fullSets: page.fullSets || [],
+          isDraft: false,
+        });
+      }
+    } catch (error) {
+      console.error('Error loading page from database:', error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  savePageToDatabase: async (userEmail: string) => {
+    set({ isLoading: true });
+    try {
+      const state = usePageStore.getState();
+      if (!state.page) return false;
+
+      const pageData = {
+        id: state.page.id,
+        displayName: state.page.displayName,
+        slug: state.page.slug,
+        themeColor: state.page.themeColor,
+        themeMode: state.page.themeMode,
+        coverPhotoUrl: state.page.coverPhotoUrl,
+        isPublished: state.page.isPublished,
+        links: state.links,
+        socialLinks: state.socialLinks,
+        customButtons: state.customButtons,
+        featuredItems: state.featuredItems,
+        tracks: state.tracks,
+        events: state.events,
+        fullSets: state.fullSets,
+      };
+
+      const response = await fetch('/api/pages/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userEmail, pageData }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        set({ isDraft: false });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error saving page to database:', error);
+      return false;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
     }),
     {
       name: 'music-admin-store', // unique name for localStorage key
