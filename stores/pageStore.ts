@@ -37,15 +37,7 @@ interface PageState {
 export const usePageStore = create<PageState>()(
   persist(
     (set) => ({
-  page: {
-    id: '1',
-    slug: 'sample-artist',
-    displayName: 'Sample Artist',
-    themeColor: 'cyan',
-    themeMode: 'dark',
-    isPublished: false,
-    isDraft: false,
-  },
+  page: null,
   links: [
     {
       id: '1',

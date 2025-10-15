@@ -46,6 +46,11 @@ export default function EditorPage() {
     }
   }, [loadPageFromDatabase]);
 
+  // Debug: Log current page state
+  useEffect(() => {
+    console.log('🔍 Admin Editor - Current page state:', page);
+  }, [page]);
+
   const handleSave = async () => {
     if (!userEmail) return;
     
@@ -64,9 +69,13 @@ export default function EditorPage() {
         <div className="mb-4 lg:mb-6 flex justify-between items-center">
           <div>
             <h1 className="text-xl lg:text-2xl font-bold text-white">Admin Panel</h1>
-            {page && (
+            {page ? (
               <p className="text-sm text-gray-400 mt-1">
                 Editing: {page.displayName} ({page.slug})
+              </p>
+            ) : (
+              <p className="text-sm text-gray-400 mt-1">
+                {isLoading ? 'Loading page data...' : 'No page loaded'}
               </p>
             )}
           </div>
