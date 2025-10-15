@@ -60,6 +60,10 @@ export function Step5Review() {
       const result = await response.json();
       setPublishedUrl(result.url);
       setIsPublished(true);
+      
+      // Store user email in localStorage for admin panel access
+      localStorage.setItem('userEmail', data.email);
+      
       completeOnboarding();
     } catch (error) {
       console.error('Publishing failed:', error);

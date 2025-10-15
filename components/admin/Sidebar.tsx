@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, LayoutDashboard, Settings } from 'lucide-react';
+import { Home, LayoutDashboard, Settings, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { id: 'home', label: 'Home', icon: Home, href: '/admin' },
   { id: 'my-page', label: 'My Page', icon: LayoutDashboard, href: '/admin/editor' },
+  { id: 'pages', label: 'Pages', icon: FileText, href: '/admin/pages' },
   { id: 'settings', label: 'Settings', icon: Settings, href: '/admin/settings' },
 ];
 
