@@ -8,8 +8,11 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization)
      * - favicon.ico
+     * - onboarding (onboarding routes)
+     * - admin (admin routes)
+     * - marketing (marketing routes)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|onboarding|admin|marketing).*)',
   ],
 };
 
@@ -18,13 +21,6 @@ export function middleware(req: NextRequest) {
   const hostname = req.headers.get('host') || '';
   
   console.log('🔍 Middleware - Hostname:', hostname);
-  
-  // Skip middleware for specific routes
-  if (url.pathname.startsWith('/onboarding') || 
-      url.pathname.startsWith('/admin') ||
-      url.pathname.startsWith('/marketing')) {
-    return NextResponse.next();
-  }
   
   // Extract subdomain
   const subdomain = getSubdomain(hostname);
