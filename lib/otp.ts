@@ -1,5 +1,5 @@
 import speakeasy from 'speakeasy';
-import nodemailer from 'nodemailer';
+import * as nodemailer from 'nodemailer';
 import { prisma } from './prisma';
 
 // Generate 6-digit OTP
@@ -9,7 +9,7 @@ export function generateOTP(): string {
 
 // Create email transporter
 function createTransporter() {
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: process.env.EMAIL_SERVER_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.EMAIL_SERVER_PORT || '587'),
     secure: false, // true for 465, false for other ports
@@ -24,7 +24,10 @@ function createTransporter() {
 export async function sendOTPEmail(email: string, otp: string): Promise<boolean> {
   try {
     // If no email credentials are configured, fall back to console logging
-    if (!process.env.EMAIL_SERVER_USER || !process.env.EMAIL_SERVER_PASSWORD) {
+    if (!process.env.EMAIL_SERVER_USER || 
+        !process.env.EMAIL_SERVER_PASSWORD || 
+        process.env.EMAIL_SERVER_USER === 'your-email@gmail.com' ||
+        process.env.EMAIL_SERVER_PASSWORD === 'your-app-password') {
       console.log(`📧 OTP for ${email}: ${otp}`);
       console.log('⚠️  Email credentials not configured. OTP logged to console only.');
       return true;
