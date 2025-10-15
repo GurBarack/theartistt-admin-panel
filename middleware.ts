@@ -19,6 +19,13 @@ export function middleware(req: NextRequest) {
   
   console.log('🔍 Middleware - Hostname:', hostname);
   
+  // Skip middleware for specific routes
+  if (url.pathname.startsWith('/onboarding') || 
+      url.pathname.startsWith('/admin') ||
+      url.pathname.startsWith('/marketing')) {
+    return NextResponse.next();
+  }
+  
   // Extract subdomain
   const subdomain = getSubdomain(hostname);
   console.log('🌐 Subdomain detected:', subdomain);
