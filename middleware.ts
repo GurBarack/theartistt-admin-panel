@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|onboarding|admin|marketing).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|onboarding|marketing).*)',
   ],
 };
 
@@ -39,6 +39,12 @@ export function middleware(req: NextRequest) {
 
   // Handle root domain (yourdomain.com)
   if (!subdomain) {
+    // Check if it's an admin route
+    if (url.pathname.startsWith('/admin')) {
+      console.log('📊 Admin route detected, allowing through');
+      return NextResponse.next();
+    }
+    
     console.log('🏠 Routing to marketing page');
     if (url.pathname === '/') {
       return NextResponse.rewrite(new URL('/marketing', req.url));
