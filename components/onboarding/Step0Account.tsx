@@ -16,6 +16,7 @@ export function Step0Account() {
   const [isLoading, setIsLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
+  const [generatedOtp, setGeneratedOtp] = useState('');
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -27,6 +28,7 @@ export function Step0Account() {
 
     setIsLoading(true);
     try {
+      // Try real email first, fallback to test mode
       const response = await fetch('/api/auth/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -37,7 +39,21 @@ export function Step0Account() {
         setOtpSent(true);
         setStep('otp');
       } else {
-        console.error('Failed to send OTP');
+        // Fallback to test mode
+        const testResponse = await fetch('/api/auth/test-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+
+        if (testResponse.ok) {
+          const data = await testResponse.json();
+          setGeneratedOtp(data.otp);
+          setOtpSent(true);
+          setStep('otp');
+        } else {
+          console.error('Failed to generate OTP');
+        }
       }
     } catch (error) {
       console.error('Error sending OTP:', error);
@@ -99,6 +115,20 @@ export function Step0Account() {
           <p className="text-gray-400">Enter the 6-digit code sent to</p>
           <p className="text-cyan-400 font-mono">{email}</p>
         </div>
+
+        {/* Test Mode - Show OTP */}
+        {generatedOtp && (
+          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 mb-6">
+            <p className="text-yellow-400 text-sm mb-2">
+              🧪 <strong>Test Mode:</strong> Email not configured. Use this OTP:
+            </p>
+            <div className="bg-gray-900 border border-yellow-500/50 rounded-lg p-3 text-center">
+              <div className="text-2xl font-mono text-yellow-400 tracking-widest">
+                {generatedOtp}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* OTP Input */}
         <div>
