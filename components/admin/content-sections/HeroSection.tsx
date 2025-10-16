@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Image from 'next/image';
 import { Upload, X, Lock, Crop } from 'lucide-react';
@@ -20,6 +20,15 @@ export function HeroSection() {
   const [showCrop, setShowCrop] = useState(false);
   const [crop, setCrop] = useState<CropType>();
   const [hasChanges, setHasChanges] = useState(false);
+
+  // Update local state when page data loads
+  useEffect(() => {
+    if (page) {
+      setArtistName(page.displayName || '');
+      setSlug(page.slug || '');
+      setPreview(page.coverPhotoUrl || null);
+    }
+  }, [page]);
 
   // Auto-generate slug from artist name
   const generateSlug = (name: string) => {
