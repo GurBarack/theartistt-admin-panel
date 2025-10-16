@@ -38,7 +38,7 @@ export default function EditorPage() {
       console.log('❌ Admin Editor - No user email found in localStorage');
       // For testing, set the email manually and load the gurba page
       const testEmail = 'gurrbb@gmail.com';
-      const gurbaPageId = 'cmgsn8jiq002auy4yx5jn3aog';
+      const gurbaPageId = 'cmgsp1i35003buy4ynn9don6l';
       console.log('🧪 Admin Editor - Using test email:', testEmail);
       console.log('🧪 Admin Editor - Loading gurba page:', gurbaPageId);
       setUserEmail(testEmail);
