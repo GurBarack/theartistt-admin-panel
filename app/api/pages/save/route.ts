@@ -137,13 +137,13 @@ export async function POST(req: NextRequest) {
 
       // Create new tracks
       if (pageData.tracks.length > 0) {
-        const validTracks = pageData.tracks.filter((track: { title: string; url: string; artworkUrl?: string }) => 
+        const validTracks = pageData.tracks.filter((track: { name: string; credits?: string; artworkUrl?: string; spotifyUrl?: string; appleMusicUrl?: string; beatportUrl?: string; youtubeUrl?: string; youtubeMusicUrl?: string; soundcloudUrl?: string; order: number }) => 
           track.name && track.name.trim() !== ''
         );
         
         if (validTracks.length > 0) {
           await prisma.track.createMany({
-            data: validTracks.map((track: { title: string; url: string; artworkUrl?: string }) => ({
+            data: validTracks.map((track: { name: string; credits?: string; artworkUrl?: string; spotifyUrl?: string; appleMusicUrl?: string; beatportUrl?: string; youtubeUrl?: string; youtubeMusicUrl?: string; soundcloudUrl?: string; order: number }) => ({
               pageId: pageData.id,
               name: track.name,
               credits: track.credits,
@@ -170,13 +170,13 @@ export async function POST(req: NextRequest) {
 
       // Create new featured items
       if (pageData.featuredItems.length > 0) {
-        const validFeaturedItems = pageData.featuredItems.filter((item: { title: string; url: string; thumbnailUrl?: string }) => 
+        const validFeaturedItems = pageData.featuredItems.filter((item: { title: string; subtitle?: string; imageUrl?: string; ctaUrl?: string; order: number }) => 
           item.title && item.title.trim() !== ''
         );
         
         if (validFeaturedItems.length > 0) {
           await prisma.featuredItem.createMany({
-            data: validFeaturedItems.map((item: { title: string; url: string; thumbnailUrl?: string }) => ({
+            data: validFeaturedItems.map((item: { title: string; subtitle?: string; imageUrl?: string; ctaUrl?: string; order: number }) => ({
               pageId: pageData.id,
               title: item.title,
               subtitle: item.subtitle,
@@ -198,13 +198,13 @@ export async function POST(req: NextRequest) {
 
       // Create new events
       if (pageData.events.length > 0) {
-        const validEvents = pageData.events.filter((event: { title: string; date: string }) => 
+        const validEvents = pageData.events.filter((event: { name: string; date: string; venue?: string; time?: string; ticketUrl?: string; location?: string; order: number }) => 
           event.name && event.name.trim() !== '' && event.date
         );
         
         if (validEvents.length > 0) {
           await prisma.event.createMany({
-            data: validEvents.map((event: { title: string; date: string; location?: string; url?: string }) => {
+            data: validEvents.map((event: { name: string; date: string; venue?: string; time?: string; ticketUrl?: string; location?: string; order: number }) => {
               // Parse date safely
               let eventDate;
               try {
@@ -243,14 +243,14 @@ export async function POST(req: NextRequest) {
       // Create new full sets
       if (pageData.fullSets.length > 0) {
         console.log('🎵 Full Sets - Processing:', pageData.fullSets.length, 'sets');
-        const validFullSets = pageData.fullSets.filter((set: { title: string; url: string }) => 
+        const validFullSets = pageData.fullSets.filter((set: { name: string; url?: string; thumbnailUrl?: string; date?: string; location?: string; spotifyUrl?: string; appleMusicUrl?: string; beatportUrl?: string; youtubeUrl?: string; youtubeMusicUrl?: string; soundcloudUrl?: string; order: number }) => 
           set.name && set.name.trim() !== ''
         );
         
         console.log('🎵 Full Sets - Valid sets:', validFullSets.length);
         
         if (validFullSets.length > 0) {
-          const fullSetData = validFullSets.map((set: { title: string; url: string; thumbnailUrl?: string; date?: string; location?: string; spotifyUrl?: string; appleMusicUrl?: string; beatportUrl?: string; youtubeUrl?: string; youtubeMusicUrl?: string; soundcloudUrl?: string }) => ({
+          const fullSetData = validFullSets.map((set: { name: string; url?: string; thumbnailUrl?: string; date?: string; location?: string; spotifyUrl?: string; appleMusicUrl?: string; beatportUrl?: string; youtubeUrl?: string; youtubeMusicUrl?: string; soundcloudUrl?: string; order: number }) => ({
             pageId: pageData.id,
             title: set.name, // Map name to title for Prisma schema
             url: set.url || '',
