@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "migrate-blob": "tsx scripts/migrate-to-blob.ts"
+    "migrate-blob": "tsx scripts/migrate-to-blob.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.0",
