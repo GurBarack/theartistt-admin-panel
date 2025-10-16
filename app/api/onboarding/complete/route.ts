@@ -10,7 +10,8 @@ export async function POST(req: NextRequest) {
       artistName: body.artistName, 
       subdomain: body.subdomain,
       genre: body.genre,
-      bio: body.bio
+      bio: body.bio,
+      coverPhotoUrl: body.coverPhotoUrl
     });
     
     const { 
@@ -79,7 +80,7 @@ export async function POST(req: NextRequest) {
         isPublished: true,
       },
     });
-    console.log('✅ Page created successfully:', page.id, 'displayName:', page.displayName, 'slug:', page.slug);
+    console.log('✅ Page created successfully:', page.id, 'displayName:', page.displayName, 'slug:', page.slug, 'coverPhotoUrl:', page.coverPhotoUrl);
 
     // Create social links
     if (socialLinks) {

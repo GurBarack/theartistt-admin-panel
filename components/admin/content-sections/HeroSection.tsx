@@ -30,9 +30,9 @@ export function HeroSection() {
   };
 
   const handleArtistNameChange = (value: string) => {
-    // Artist name cannot be changed after creation
-    // Only allow if it's empty (initial state)
-    if (!page?.displayName || artistName === '') {
+    // Artist name cannot be changed after page is loaded from database
+    // Only allow if page is null (initial state before loading)
+    if (page === null) {
       setArtistName(value);
       const newSlug = generateSlug(value);
       setSlug(newSlug);
@@ -106,7 +106,7 @@ export function HeroSection() {
             {/* Artist Name Field */}
             <div>
               <Label htmlFor="artistName" className="block text-sm font-medium text-gray-300 mb-2">
-                Artist Name {page?.displayName && (
+                Artist Name {page && (
                   <span className="text-xs text-cyan-400 ml-2 flex items-center gap-1">
                     <Lock className="w-3 h-3" />
                     Locked
@@ -120,13 +120,13 @@ export function HeroSection() {
                   onChange={(e) => handleArtistNameChange(e.target.value)}
                   placeholder="Enter artist name"
                   className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-                  disabled={!!page?.displayName}
+                  disabled={!!page}
                 />
-                {page?.displayName && (
+                {page && (
                   <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                 )}
               </div>
-              {page?.displayName && (
+              {page && (
                 <p className="text-xs text-gray-500 mt-1">
                   Artist name cannot be changed after creation
                 </p>
