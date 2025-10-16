@@ -1,28 +1,56 @@
 'use client';
 
 import { useOnboardingStore } from '@/stores/onboardingStore';
+import { WelcomeScreen } from '@/components/onboarding/WelcomeScreen';
+import { Step0Account } from '@/components/onboarding/Step0Account';
+import { Step1Identity } from '@/components/onboarding/Step1Identity';
+import { Step2Sound } from '@/components/onboarding/Step2Sound';
+import { Step3Platforms } from '@/components/onboarding/Step3Platforms';
+import { Step4Visual } from '@/components/onboarding/Step4Visual';
+import { Step5Review } from '@/components/onboarding/Step5Review';
+import { OnboardingProgress } from '@/components/onboarding/OnboardingProgress';
 
 export default function TestOnboardingPage() {
-  const { data, currentStep, isComplete } = useOnboardingStore();
+  const { currentStep } = useOnboardingStore();
 
   return (
-    <div className="min-h-screen bg-gray-900 p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-white mb-8">Onboarding Store Debug</h1>
-        
-        <div className="bg-gray-800 rounded-lg p-6 mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Current State</h2>
-          <div className="space-y-2 text-gray-300">
-            <p><strong>Current Step:</strong> {currentStep}</p>
-            <p><strong>Is Complete:</strong> {isComplete ? 'Yes' : 'No'}</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center p-6">
+      <div className="w-full max-w-2xl">
+        {/* Welcome Screen */}
+        {currentStep === 0 && (
+          <div className="bg-gray-800/50 backdrop-blur-xl rounded-3xl p-12 border border-gray-700 shadow-2xl">
+            <WelcomeScreen />
           </div>
-        </div>
+        )}
 
-        <div className="bg-gray-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Stored Data</h2>
-          <pre className="text-gray-300 text-sm overflow-auto">
-            {JSON.stringify(data, null, 2)}
-          </pre>
+        {/* Onboarding Steps */}
+        {currentStep > 0 && (
+          <>
+            {/* Progress Bar */}
+            <OnboardingProgress currentStep={currentStep} totalSteps={6} />
+
+            {/* Step Content */}
+            <div className="bg-gray-800/50 backdrop-blur-xl rounded-3xl p-8 mt-8 border border-gray-700 shadow-2xl">
+              {currentStep === 1 && <Step0Account />}
+              {currentStep === 2 && <Step1Identity />}
+              {currentStep === 3 && <Step2Sound />}
+              {currentStep === 4 && <Step3Platforms />}
+              {currentStep === 5 && <Step4Visual />}
+              {currentStep === 6 && <Step5Review />}
+            </div>
+
+            {/* Footer */}
+            <p className="text-center text-gray-500 text-sm mt-6">
+              Step {currentStep} of 6 • Takes about 5 minutes
+            </p>
+          </>
+        )}
+
+        {/* Debug Info */}
+        <div className="mt-8 bg-gray-800/30 rounded-lg p-4 text-center">
+          <p className="text-gray-400 text-sm">
+            🧪 <strong>Test Mode:</strong> This is a test onboarding page that doesn't require authentication
+          </p>
         </div>
       </div>
     </div>

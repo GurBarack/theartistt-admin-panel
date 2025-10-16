@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Mail, ArrowRight, Shield, Check } from 'lucide-react';
+import { Mail, Shield, Check } from 'lucide-react';
 
-export default function SignInPage() {
+export default function TestAuthFlowPage() {
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -16,8 +16,8 @@ export default function SignInPage() {
   const [otpVerified, setOtpVerified] = useState(false);
   const [generatedOtp, setGeneratedOtp] = useState('');
   const [isNewUser, setIsNewUser] = useState(false);
-  const router = useRouter();
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   // Check if user is already authenticated
   useEffect(() => {
@@ -25,8 +25,7 @@ export default function SignInPage() {
 
     if (session) {
       // User is already authenticated, redirect to appropriate page
-      // Check onboarding status and redirect accordingly
-      router.push('/onboarding'); // For now, always redirect to onboarding
+      router.push('/onboarding');
     }
   }, [session, status, router]);
 
@@ -58,7 +57,7 @@ export default function SignInPage() {
 
     setIsLoading(true);
     try {
-      const response = await fetch('/api/auth/send-otp', {
+      const response = await fetch('/api/auth/test-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -66,27 +65,16 @@ export default function SignInPage() {
 
       if (response.ok) {
         const data = await response.json();
-        setIsNewUser(data.isNewUser);
+        setGeneratedOtp(data.otp);
+        setIsNewUser(true);
         setIsEmailSent(true);
       } else {
-        // Fallback to test mode
-        const testResponse = await fetch('/api/auth/test-otp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email }),
-        });
-
-        if (testResponse.ok) {
-          const testData = await testResponse.json();
-          setGeneratedOtp(testData.otp);
-          setIsNewUser(true); // Assume new user in test mode
-          setIsEmailSent(true);
-        } else {
-          console.error('Failed to send OTP');
-        }
+        console.error('Failed to send OTP');
+        alert('Failed to send OTP. Please try again.');
       }
     } catch (error) {
       console.error('Error sending OTP:', error);
+      alert('Error sending OTP. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -97,21 +85,12 @@ export default function SignInPage() {
 
     setIsLoading(true);
     try {
-      // Try regular verify first, fallback to test verify
-      let response = await fetch('/api/auth/verify-otp', {
+      // First verify the OTP
+      const response = await fetch('/api/auth/test-verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp }),
       });
-
-      if (!response.ok) {
-        // Fallback to test verify
-        response = await fetch('/api/auth/test-verify-otp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, otp }),
-        });
-      }
 
       if (response.ok) {
         const data = await response.json();
@@ -126,10 +105,9 @@ export default function SignInPage() {
         });
 
         if (result?.ok) {
-          // Redirect to onboarding after successful signin
-          setTimeout(() => {
-            router.push(data.redirectPath);
-          }, 1500);
+          alert('✅ Successfully signed in! You can now access protected pages.');
+          // Redirect to onboarding
+          window.location.href = '/onboarding';
         } else {
           console.error('Sign in failed:', result?.error);
           alert('Sign in failed. Please try again.');
@@ -188,7 +166,7 @@ export default function SignInPage() {
             {generatedOtp && (
               <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 mb-6">
                 <p className="text-yellow-400 text-sm mb-2">
-                  🧪 <strong>Test Mode:</strong> Email not configured. Use this OTP:
+                  🧪 <strong>Test Mode:</strong> Use this OTP:
                 </p>
                 <div className="bg-gray-900 border border-yellow-500/50 rounded-lg p-3 text-center">
                   <div className="text-2xl font-mono text-yellow-400 tracking-widest">
@@ -221,13 +199,6 @@ export default function SignInPage() {
                 </p>
               </div>
 
-              {/* Info Box */}
-              <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4">
-                <p className="text-purple-400 text-sm">
-                  📧 <strong>Check your email:</strong> The code expires in 10 minutes
-                </p>
-              </div>
-
               {/* Navigation */}
               <div className="flex justify-between gap-3 pt-4">
                 <Button
@@ -247,7 +218,7 @@ export default function SignInPage() {
                   size="lg"
                   className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
                 >
-                  {isLoading ? 'Verifying...' : 'Verify & Continue →'}
+                  {isLoading ? 'Verifying...' : 'Verify & Sign In →'}
                 </Button>
               </div>
             </div>
@@ -262,9 +233,9 @@ export default function SignInPage() {
       <div className="w-full max-w-md">
         <div className="bg-gray-800/50 backdrop-blur-xl rounded-3xl p-8 border border-gray-700 shadow-2xl">
           <div className="text-center mb-8">
-            <div className="text-6xl mb-4">🎵</div>
-            <h1 className="text-3xl font-bold text-white mb-2">Welcome to The Artist</h1>
-            <p className="text-gray-400">Enter your email to get started</p>
+            <div className="text-6xl mb-4">🧪</div>
+            <h1 className="text-3xl font-bold text-white mb-2">Test Auth Flow</h1>
+            <p className="text-gray-400">Test the seamless authentication flow</p>
           </div>
 
           <form onSubmit={handleSendOTP} className="space-y-6">
@@ -279,7 +250,7 @@ export default function SignInPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
+                  placeholder="test@example.com"
                   className="pl-12 bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
                   required
                 />
@@ -296,20 +267,13 @@ export default function SignInPage() {
               disabled={isLoading || !email || !validateEmail(email)}
               className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white"
             >
-              {isLoading ? (
-                'Sending Code...'
-              ) : (
-                <>
-                  Send Verification Code
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </>
-              )}
+              {isLoading ? 'Sending Code...' : 'Send Test OTP'}
             </Button>
           </form>
 
           <div className="mt-8 text-center">
             <p className="text-gray-500 text-sm">
-              We'll send you a 6-digit code to verify your email. No password required!
+              This is a test page to verify the authentication flow works correctly.
             </p>
           </div>
         </div>

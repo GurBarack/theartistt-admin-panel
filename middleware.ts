@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|onboarding|marketing).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
 
@@ -16,11 +16,11 @@ export function middleware(req: NextRequest) {
   const subdomain = getSubdomain(hostname);
   console.log('🌐 Subdomain detected:', subdomain);
 
-  // Handle admin subdomain
-  if (subdomain === 'admin') {
+  // Handle app subdomain (admin panel)
+  if (subdomain === 'app') {
     console.log('📊 Routing to admin panel');
     // Already on correct path
-    if (url.pathname.startsWith('/admin')) {
+    if (url.pathname.startsWith('/admin') || url.pathname.startsWith('/auth') || url.pathname.startsWith('/onboarding')) {
       return NextResponse.next();
     }
     // Redirect root to admin
@@ -37,14 +37,8 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(newUrl, 301);
   }
 
-  // Handle root domain (yourdomain.com)
+  // Handle root domain (theartistt.com)
   if (!subdomain) {
-    // Check if it's an admin route
-    if (url.pathname.startsWith('/admin')) {
-      console.log('📊 Admin route detected, allowing through');
-      return NextResponse.next();
-    }
-    
     console.log('🏠 Routing to marketing page');
     if (url.pathname === '/') {
       return NextResponse.rewrite(new URL('/marketing', req.url));
@@ -75,7 +69,7 @@ function getSubdomain(hostname: string): string | null {
   const parts = host.split('.');
   
   // theartistt.com → null
-  // admin.theartistt.com → 'admin'
+  // app.theartistt.com → 'app'
   // roiko-music.theartistt.com → 'roiko-music'
   
   if (parts.length >= 3) {

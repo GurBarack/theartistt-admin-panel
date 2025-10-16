@@ -137,7 +137,7 @@ export function Step5Review() {
             Go to My Page
           </Button>
           <Button 
-            onClick={() => window.location.href = '/admin/editor'} 
+            onClick={() => window.location.href = '/admin'} 
             variant="outline" 
             size="lg"
           >

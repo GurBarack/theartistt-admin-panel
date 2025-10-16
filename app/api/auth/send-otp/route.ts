@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateOTP, sendOTPEmail, storeOTP, cleanupExpiredOTPs } from '@/lib/otp';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,6 +15,12 @@ export async function POST(req: NextRequest) {
 
     // Clean up expired OTPs
     await cleanupExpiredOTPs();
+
+    // Check if user exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true } // Only select fields that exist
+    });
 
     // Generate OTP
     const otp = generateOTP();
@@ -33,6 +40,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'OTP sent successfully',
+      isNewUser: !existingUser,
+      hasCompletedOnboarding: false, // Default to false since field doesn't exist yet
     });
   } catch (error) {
     console.error('Send OTP error:', error);

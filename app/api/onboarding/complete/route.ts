@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
     // Check if user already exists
     let user = await prisma.user.findUnique({
       where: { email },
+      select: { id: true, email: true, name: true } // Only select fields that exist
     });
 
     // Create user if doesn't exist
@@ -49,8 +50,15 @@ export async function POST(req: NextRequest) {
         data: {
           email,
           name,
+          // hasCompletedOnboarding: true, // Will be added after schema migration
         },
       });
+    } else {
+      // Update existing user to mark onboarding as completed
+      // user = await prisma.user.update({
+      //   where: { id: user.id },
+      //   data: { hasCompletedOnboarding: true },
+      // });
     }
 
     // Check if subdomain is already taken
@@ -139,8 +147,16 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error('Onboarding completion error:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
+    });
     return NextResponse.json(
-      { error: 'Failed to create page' },
+      { 
+        error: 'Failed to create page',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }

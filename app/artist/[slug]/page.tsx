@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { LandingPageContent } from '@/components/landing/LandingPageContent';
 
@@ -35,8 +35,12 @@ export default async function ArtistPage({
     featuredItemsCount: page?.featuredItems?.length || 0
   });
 
-  if (!page || !page.isPublished) {
+  if (!page) {
     notFound();
+  }
+  
+  if (!page.isPublished) {
+    redirect('/auth/signin');
   }
 
   // Convert database data to landing page format

@@ -1,5 +1,8 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 import { WelcomeScreen } from '@/components/onboarding/WelcomeScreen';
 import { Step0Account } from '@/components/onboarding/Step0Account';
@@ -12,6 +15,34 @@ import { OnboardingProgress } from '@/components/onboarding/OnboardingProgress';
 
 export default function OnboardingPage() {
   const { currentStep } = useOnboardingStore();
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  // Redirect to signin if not authenticated
+  useEffect(() => {
+    if (status === 'loading') return; // Do nothing while loading
+
+    if (!session) {
+      router.push('/auth/signin');
+    }
+  }, [session, status, router]);
+
+  // Show loading while checking session
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center p-6">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500 mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated (will redirect)
+  if (!session) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center p-6">

@@ -27,7 +27,10 @@ export async function POST(req: NextRequest) {
       where: { email },
     });
 
+    const isNewUser = !user;
+
     if (!user) {
+      // Create new user
       user = await prisma.user.create({
         data: {
           email,
@@ -35,12 +38,15 @@ export async function POST(req: NextRequest) {
         },
       });
     } else {
-      // Update user as verified
+      // Update existing user as verified
       user = await prisma.user.update({
         where: { id: user.id },
         data: { otpVerified: true },
       });
     }
+
+    // For now, always redirect to onboarding since we can't check hasCompletedOnboarding
+    let redirectPath = '/onboarding';
 
     return NextResponse.json({
       success: true,
@@ -50,7 +56,10 @@ export async function POST(req: NextRequest) {
         email: user.email,
         name: user.name,
         otpVerified: user.otpVerified,
+        hasCompletedOnboarding: false, // Default to false since field doesn't exist yet
       },
+      isNewUser,
+      redirectPath,
     });
   } catch (error) {
     console.error('Verify OTP error:', error);
