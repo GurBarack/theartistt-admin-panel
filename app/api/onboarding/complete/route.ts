@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { uploadBase64ToBlob } from '@/lib/blob';
 
 export async function POST(req: NextRequest) {
   try {
@@ -65,6 +66,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Upload cover photo to blob storage if provided
+    let finalCoverPhotoUrl = null;
+    if (coverPhotoUrl && coverPhotoUrl.startsWith('data:')) {
+      try {
+        console.log('📸 Uploading cover photo to blob storage...');
+        finalCoverPhotoUrl = await uploadBase64ToBlob(
+          coverPhotoUrl, 
+          `${subdomain}-cover-${Date.now()}.jpg`
+        );
+        console.log('✅ Cover photo uploaded:', finalCoverPhotoUrl);
+      } catch (error) {
+        console.error('❌ Failed to upload cover photo:', error);
+        // Continue without cover photo rather than failing completely
+      }
+    } else if (coverPhotoUrl) {
+      // If it's already a URL (not base64), use it as is
+      finalCoverPhotoUrl = coverPhotoUrl;
+    }
+
     // Create the page
     console.log('🔄 Creating page for user:', user.id, 'with subdomain:', subdomain, 'artistName:', artistName);
     const page = await prisma.page.create({
@@ -76,7 +96,7 @@ export async function POST(req: NextRequest) {
         bio: bio || '',
         themeColor: themeColor || 'cyan',
         themeMode: themeMode || 'dark',
-        coverPhotoUrl: coverPhotoUrl || null,
+        coverPhotoUrl: finalCoverPhotoUrl,
         isPublished: true,
       },
     });

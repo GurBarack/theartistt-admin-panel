@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { uploadBase64ToBlob } from '@/lib/blob';
 
 export async function POST(req: NextRequest) {
   try {
@@ -30,6 +31,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Page not found' }, { status: 404 });
     }
 
+    // Handle cover photo upload if it's a new base64 image
+    let finalCoverPhotoUrl = pageData.coverPhotoUrl;
+    if (pageData.coverPhotoUrl && pageData.coverPhotoUrl.startsWith('data:')) {
+      try {
+        console.log('📸 Uploading new cover photo to blob storage...');
+        finalCoverPhotoUrl = await uploadBase64ToBlob(
+          pageData.coverPhotoUrl, 
+          `${pageData.slug}-cover-${Date.now()}.jpg`
+        );
+        console.log('✅ Cover photo uploaded:', finalCoverPhotoUrl);
+      } catch (error) {
+        console.error('❌ Failed to upload cover photo:', error);
+        // Keep the existing cover photo if upload fails
+      }
+    }
+
     // Update the page
     const updatedPage = await prisma.page.update({
       where: { id: pageData.id },
@@ -38,7 +55,7 @@ export async function POST(req: NextRequest) {
         slug: pageData.slug,
         themeColor: pageData.themeColor,
         themeMode: pageData.themeMode,
-        coverPhotoUrl: pageData.coverPhotoUrl,
+        coverPhotoUrl: finalCoverPhotoUrl,
         isPublished: pageData.isPublished || false,
       },
     });
