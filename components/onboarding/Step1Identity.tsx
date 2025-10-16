@@ -13,8 +13,6 @@ export function Step1Identity() {
   const [subdomain, setSubdomain] = useState(data.subdomain);
   const [isChecking, setIsChecking] = useState(false);
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
-  const [isArtistNameLocked, setIsArtistNameLocked] = useState(false);
-
   // Generate subdomain from artist name
   useEffect(() => {
     const newSubdomain = artistName
@@ -23,13 +21,6 @@ export function Step1Identity() {
       .replace(/^-+|-+$/g, '');
     setSubdomain(newSubdomain);
   }, [artistName]);
-
-  // Lock artist name after first input
-  useEffect(() => {
-    if (artistName && !isArtistNameLocked) {
-      setIsArtistNameLocked(true);
-    }
-  }, [artistName, isArtistNameLocked]);
 
   // Check subdomain availability
   useEffect(() => {
@@ -77,26 +68,19 @@ export function Step1Identity() {
         <Label htmlFor="artistName" className="text-gray-300 text-base mb-2 block">
           Artist Name *
         </Label>
-        <Input
-          id="artistName"
-          value={artistName}
-          onChange={(e) => setArtistName(e.target.value)}
-          placeholder="Enter your artist name"
-          className="text-lg h-14 bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-          maxLength={30}
-          disabled={isArtistNameLocked}
-        />
-        <div className="flex justify-between items-center mt-1">
-          <p className="text-xs text-gray-500">
-            {artistName.length}/30 characters
-          </p>
-          {isArtistNameLocked && (
-            <p className="text-xs text-cyan-400 flex items-center gap-1">
-              <Check className="w-3 h-3" />
-              Locked
-            </p>
-          )}
-        </div>
+            <Input
+              id="artistName"
+              value={artistName}
+              onChange={(e) => setArtistName(e.target.value)}
+              placeholder="Enter your artist name"
+              className="text-lg h-14 bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+              maxLength={30}
+            />
+            <div className="flex justify-between items-center mt-1">
+              <p className="text-xs text-gray-500">
+                {artistName.length}/30 characters
+              </p>
+            </div>
       </div>
 
       {/* Subdomain Preview */}
