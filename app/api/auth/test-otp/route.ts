@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateOTP } from '@/lib/otp';
-
-// In-memory storage for testing (replace with database in production)
-const testOTPs = new Map<string, { otp: string; expiresAt: Date }>();
+import { storeTestOTP, cleanupExpiredOTPs } from '@/lib/test-storage';
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,14 +18,10 @@ export async function POST(req: NextRequest) {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
     // Store OTP in memory for testing
-    testOTPs.set(email, { otp, expiresAt });
+    storeTestOTP(email, otp, expiresAt);
 
     // Clean up expired OTPs
-    for (const [key, value] of testOTPs.entries()) {
-      if (value.expiresAt < new Date()) {
-        testOTPs.delete(key);
-      }
-    }
+    cleanupExpiredOTPs();
 
     // Return OTP for testing (in production, this would be sent via email)
     return NextResponse.json({
@@ -45,5 +39,5 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Export the testOTPs map for verification
-export { testOTPs };
+// Note: testOTPs is not exported to avoid Next.js route validation errors
+// The test-verify-otp route will need to access this differently

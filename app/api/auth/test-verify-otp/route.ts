@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { testOTPs } from '../test-otp/route';
+import { getTestOTP, deleteTestOTP } from '@/lib/test-storage';
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if OTP exists and is valid
-    const storedOTP = testOTPs.get(email);
+    const storedOTP = getTestOTP(email);
     
     if (!storedOTP) {
       return NextResponse.json(
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (storedOTP.expiresAt < new Date()) {
-      testOTPs.delete(email);
+      deleteTestOTP(email);
       return NextResponse.json(
         { error: 'OTP has expired' },
         { status: 400 }
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Remove OTP after successful verification
-    testOTPs.delete(email);
+    deleteTestOTP(email);
 
     // For testing, we'll simulate user creation/verification
     const isNewUser = !email.includes('existing'); // Simple test logic
