@@ -27,7 +27,7 @@ export default function AdminLayout({
 
       // Check if user has any published pages (indicates completed onboarding)
       try {
-        console.log('🔍 Admin Layout - Checking pages for user:', session.user.email);
+        console.log('🔍 Admin Layout - Checking pages for user:', session.user?.email);
         const response = await fetch('/api/pages/list');
         console.log('🔍 Admin Layout - Pages API response status:', response.status);
         
