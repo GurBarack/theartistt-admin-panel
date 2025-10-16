@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     }
 
     // For now, always redirect to onboarding since we can't check hasCompletedOnboarding
-    let redirectPath = '/onboarding';
+    const redirectPath = '/onboarding';
 
     return NextResponse.json({
       success: true,
