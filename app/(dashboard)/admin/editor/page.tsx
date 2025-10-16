@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { HeroSection } from '@/components/admin/content-sections/HeroSection';
 import { SectionReorder } from '@/components/admin/content-sections/SectionReorder';
-import { CoverPhotoSection } from '@/components/admin/content-sections/CoverPhotoSection';
 import { LinksSection } from '@/components/admin/content-sections/LinksSection';
 import { SocialLinksSection } from '@/components/admin/content-sections/SocialLinksSection';
 import { CustomButtonsSection } from '@/components/admin/content-sections/CustomButtonsSection';
@@ -28,21 +27,24 @@ export default function EditorPage() {
 
   // Load user email and page data on mount
   useEffect(() => {
-    const email = localStorage.getItem('userEmail');
-    console.log('🔍 Admin Editor - User email from localStorage:', email);
-    if (email) {
-      setUserEmail(email);
-      console.log('🔄 Admin Editor - Loading page data...');
-      loadPageFromDatabase(email);
-    } else {
-      console.log('❌ Admin Editor - No user email found in localStorage');
-      // For testing, set the email manually and load the gurba page
-      const testEmail = 'gurrbb@gmail.com';
-      const gurbaPageId = 'cmgsp1i35003buy4ynn9don6l';
-      console.log('🧪 Admin Editor - Using test email:', testEmail);
-      console.log('🧪 Admin Editor - Loading gurba page:', gurbaPageId);
-      setUserEmail(testEmail);
-      loadPageFromDatabase(testEmail, gurbaPageId);
+    // Check if we're in the browser before accessing localStorage
+    if (typeof window !== 'undefined') {
+      const email = localStorage.getItem('userEmail');
+      console.log('🔍 Admin Editor - User email from localStorage:', email);
+      if (email) {
+        setUserEmail(email);
+        console.log('🔄 Admin Editor - Loading page data...');
+        loadPageFromDatabase(email);
+      } else {
+        console.log('❌ Admin Editor - No user email found in localStorage');
+        // For testing, set the email manually and load the gurba page
+        const testEmail = 'gurrbb@gmail.com';
+        const gurbaPageId = 'cmgsp1i35003buy4ynn9don6l';
+        console.log('🧪 Admin Editor - Using test email:', testEmail);
+        console.log('🧪 Admin Editor - Loading gurba page:', gurbaPageId);
+        setUserEmail(testEmail);
+        loadPageFromDatabase(testEmail, gurbaPageId);
+      }
     }
   }, [loadPageFromDatabase]);
 
@@ -133,13 +135,37 @@ export default function EditorPage() {
       <div className="w-full lg:w-[40%] xl:w-[35%] bg-gray-950 flex items-center justify-center p-4 lg:p-8 relative min-h-[400px] lg:min-h-0">
         <div className="text-center mb-4 absolute top-4 lg:top-6 left-0 right-0 flex justify-between items-center px-4">
           <h3 className="text-base lg:text-lg font-semibold text-white">Preview</h3>
-          <a 
-            href="/live-demo" 
-            target="_blank"
-            className="bg-cyan-400 text-gray-900 px-3 py-2 lg:px-4 rounded-full text-xs lg:text-sm font-semibold hover:bg-cyan-300 transition-colors"
-          >
-            View Live Demo
-          </a>
+          <div className="flex gap-2">
+            <button
+              onClick={async () => {
+                console.log('🔄 Save button clicked');
+                try {
+                  const success = await savePageToDatabase('gurrbb@gmail.com');
+                  console.log('💾 Save result:', success);
+                  if (success) {
+                    alert('Changes saved successfully!');
+                  } else {
+                    alert('Failed to save changes. Please try again.');
+                  }
+                } catch (error) {
+                  console.error('❌ Save error:', error);
+                  const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+                  alert('Error saving changes: ' + errorMessage);
+                }
+              }}
+              disabled={isLoading}
+              className="bg-green-600 text-white px-3 py-2 lg:px-4 rounded-full text-xs lg:text-sm font-semibold hover:bg-green-500 transition-colors disabled:opacity-50"
+            >
+              {isLoading ? 'Saving...' : 'Save Changes'}
+            </button>
+            <a 
+              href="/live-demo" 
+              target="_blank"
+              className="bg-cyan-400 text-gray-900 px-3 py-2 lg:px-4 rounded-full text-xs lg:text-sm font-semibold hover:bg-cyan-300 transition-colors"
+            >
+              View Live Demo
+            </a>
+          </div>
         </div>
         <div className="scale-75 lg:scale-100 origin-center">
           <MobilePreview />

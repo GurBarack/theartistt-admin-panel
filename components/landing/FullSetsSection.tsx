@@ -1,16 +1,23 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
+import { FullSetModal } from './FullSetModal';
 
 interface FullSet {
   id: string;
-  name: string;
-  date: string;
+  title: string;
+  url: string;
+  thumbnailUrl?: string;
+  date?: string;
   location?: string;
-  thumbnailUrl: string;
-  badgeText?: string;
+  spotifyUrl?: string;
+  appleMusicUrl?: string;
+  beatportUrl?: string;
+  youtubeUrl?: string;
+  youtubeMusicUrl?: string;
+  soundcloudUrl?: string;
 }
 
 interface FullSetsSectionProps {
@@ -21,6 +28,11 @@ interface FullSetsSectionProps {
 
 export function FullSetsSection({ sets, onSeeAll, onCardClick }: FullSetsSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [selectedSet, setSelectedSet] = useState<FullSet | null>(null);
+
+  const handleCardClick = (set: FullSet) => {
+    setSelectedSet(set);
+  };
 
   return (
     <section className="py-8 px-6 bg-gray-950">
@@ -41,10 +53,10 @@ export function FullSetsSection({ sets, onSeeAll, onCardClick }: FullSetsSection
         className="flex gap-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-4"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {sets.map((set, index) => (
+        {sets.slice(0, 4).map((set, index) => (
           <div
             key={set.id}
-            onClick={() => onCardClick(set.id)}
+            onClick={() => handleCardClick(set)}
             className="flex-shrink-0 w-[280px] h-[400px] rounded-3xl overflow-hidden relative cursor-pointer snap-start border border-gray-800 hover:border-gray-700 transition-all"
             style={{
               marginLeft: index === 0 ? '0' : '0',
@@ -55,8 +67,9 @@ export function FullSetsSection({ sets, onSeeAll, onCardClick }: FullSetsSection
             {set.thumbnailUrl ? (
               <Image
                 src={set.thumbnailUrl}
-                alt={set.name || 'Full set'}
+                alt={set.title || 'Full set'}
                 fill
+                sizes="280px"
                 className="object-cover"
               />
             ) : (
@@ -68,22 +81,23 @@ export function FullSetsSection({ sets, onSeeAll, onCardClick }: FullSetsSection
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/90" />
 
-            {/* Badge */}
-            {set.badgeText && (
-              <div className="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                {set.badgeText}
-              </div>
-            )}
 
             {/* Content */}
             <div className="absolute bottom-0 left-0 right-0 p-6">
-              <h3 className="text-white text-xl font-bold mb-1">{set.name}</h3>
+              <h3 className="text-white text-xl font-bold mb-1">{set.title}</h3>
               <p className="text-gray-400 text-sm">{set.date}</p>
               <p className="text-gray-400 text-sm">{set.location || ''}</p>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Full Set Modal */}
+      <FullSetModal
+        fullSet={selectedSet}
+        isOpen={!!selectedSet}
+        onClose={() => setSelectedSet(null)}
+      />
 
       <style jsx>{`
         .hide-scrollbar::-webkit-scrollbar {

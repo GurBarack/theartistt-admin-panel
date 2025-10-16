@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Plus, Trash2 } from 'lucide-react';
 import { usePageStore } from '@/stores/pageStore';
 import { FullSet } from '@/types';
@@ -17,11 +18,11 @@ export function FullSetsSection() {
     const newSet: FullSet = {
       id: `temp-${Date.now()}`,
       pageId: '',
-      name: '',
+      title: '',
+      url: '',
       date: '',
       location: '',
       thumbnailUrl: '',
-      badgeText: '',
       spotifyUrl: '',
       appleMusicUrl: '',
       beatportUrl: '',
@@ -61,10 +62,40 @@ export function FullSetsSection() {
     setIsDraft(false);
   };
 
-  const handleFileUpload = (setId: string, file: File) => {
-    // Create a URL for the uploaded file
-    const imageUrl = URL.createObjectURL(file);
-    handleUpdate(setId, 'thumbnailUrl', imageUrl);
+  const handleFileUpload = async (setId: string, file: File | null) => {
+    if (file === null) {
+      // Handle deletion
+      handleUpdate(setId, 'thumbnailUrl', '');
+      return;
+    }
+
+    try {
+      // Convert file to base64
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64String = reader.result as string;
+        
+        // Upload to Vercel Blob
+        const response = await fetch('/api/blob/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            base64String,
+            filename: `fullset-${setId}-${Date.now()}.jpg`
+          }),
+        });
+        
+        if (response.ok) {
+          const { url } = await response.json();
+          handleUpdate(setId, 'thumbnailUrl', url);
+        } else {
+          console.error('Failed to upload image');
+        }
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
   };
 
   return (
@@ -89,15 +120,15 @@ export function FullSetsSection() {
                   </Button>
                 </div>
                 <Input
-                  value={set.name}
-                  onChange={(e) => handleUpdate(set.id, 'name', e.target.value)}
+                  value={set.title}
+                  onChange={(e) => handleUpdate(set.id, 'title', e.target.value)}
                   placeholder="Set name"
                   className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
                 />
-                <Input
-                  value={set.date}
-                  onChange={(e) => handleUpdate(set.id, 'date', e.target.value)}
-                  placeholder="Date (YYYY-MM-DD)"
+                <DatePicker
+                  value={set.date || ''}
+                  onChange={(value) => handleUpdate(set.id, 'date', value)}
+                  placeholder="Select date"
                   className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
                 />
                 <Input
@@ -110,45 +141,83 @@ export function FullSetsSection() {
                   <label className="text-sm text-gray-300">Thumbnail</label>
                   <FileUpload
                     onFileSelect={(file) => handleFileUpload(set.id, file)}
-                    currentImageUrl={set.thumbnailUrl}
+                    currentImageUrl={set.thumbnailUrl || ''}
                     placeholder="Upload thumbnail"
                     aspectRatio="aspect-video"
                     className="w-full h-48"
                   />
                 </div>
                 <Input
-                  value={set.badgeText || ''}
-                  onChange={(e) => handleUpdate(set.id, 'badgeText', e.target.value)}
-                  placeholder="Badge text (optional)"
+                  value={set.url || ''}
+                  onChange={(e) => handleUpdate(set.id, 'url', e.target.value)}
+                  placeholder="Set URL (optional)"
                   className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
                 />
-                <div className="grid grid-cols-2 gap-2">
-                  <Input
-                    value={set.spotifyUrl || ''}
-                    onChange={(e) => handleUpdate(set.id, 'spotifyUrl', e.target.value)}
-                    placeholder="Spotify URL"
-                    className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-                  />
-                  <Input
-                    value={set.appleMusicUrl || ''}
-                    onChange={(e) => handleUpdate(set.id, 'appleMusicUrl', e.target.value)}
-                    placeholder="Apple Music URL"
-                    className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <Input
-                    value={set.soundcloudUrl || ''}
-                    onChange={(e) => handleUpdate(set.id, 'soundcloudUrl', e.target.value)}
-                    placeholder="SoundCloud URL"
-                    className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-                  />
-                  <Input
-                    value={set.youtubeUrl || ''}
-                    onChange={(e) => handleUpdate(set.id, 'youtubeUrl', e.target.value)}
-                    placeholder="YouTube URL"
-                    className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-                  />
+                <div className="space-y-2">
+                  <label className="text-sm text-gray-300">Platform Links (Optional)</label>
+                  
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-xs text-gray-400 mb-1 block">Spotify</label>
+                      <Input
+                        value={set.spotifyUrl ?? ''}
+                        onChange={(e) => handleUpdate(set.id, 'spotifyUrl', e.target.value)}
+                        placeholder="Spotify URL"
+                        className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-400 mb-1 block">Apple Music</label>
+                      <Input
+                        value={set.appleMusicUrl ?? ''}
+                        onChange={(e) => handleUpdate(set.id, 'appleMusicUrl', e.target.value)}
+                        placeholder="Apple Music URL"
+                        className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-xs text-gray-400 mb-1 block">Beatport</label>
+                      <Input
+                        value={set.beatportUrl ?? ''}
+                        onChange={(e) => handleUpdate(set.id, 'beatportUrl', e.target.value)}
+                        placeholder="Beatport URL"
+                        className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-400 mb-1 block">YouTube</label>
+                      <Input
+                        value={set.youtubeUrl ?? ''}
+                        onChange={(e) => handleUpdate(set.id, 'youtubeUrl', e.target.value)}
+                        placeholder="YouTube URL"
+                        className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-xs text-gray-400 mb-1 block">YouTube Music</label>
+                      <Input
+                        value={set.youtubeMusicUrl ?? ''}
+                        onChange={(e) => handleUpdate(set.id, 'youtubeMusicUrl', e.target.value)}
+                        placeholder="YouTube Music URL"
+                        className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-400 mb-1 block">SoundCloud</label>
+                      <Input
+                        value={set.soundcloudUrl ?? ''}
+                        onChange={(e) => handleUpdate(set.id, 'soundcloudUrl', e.target.value)}
+                        placeholder="SoundCloud URL"
+                        className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

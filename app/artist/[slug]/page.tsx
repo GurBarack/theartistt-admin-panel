@@ -27,6 +27,13 @@ export default async function ArtistPage({
 }) {
   const { slug } = await params;
   const page = await getPageBySlug(slug);
+  
+  console.log('🎨 Artist Page - Loading data for slug:', slug);
+  console.log('🎨 Artist Page - Page data:', {
+    displayName: page?.displayName,
+    themeColor: page?.themeColor,
+    featuredItemsCount: page?.featuredItems?.length || 0
+  });
 
   if (!page || !page.isPublished) {
     notFound();
@@ -37,7 +44,7 @@ export default async function ArtistPage({
     displayName: page.displayName,
     coverPhotoUrl: page.coverPhotoUrl || '',
     themeColor: page.themeColor,
-    themeMode: page.themeMode,
+    themeMode: page.themeMode as 'light' | 'dark',
     links: page.links.map(link => ({
       id: link.id,
       platform: link.platform as 'spotify' | 'apple-music' | 'soundcloud' | 'beatport' | 'youtube' | 'youtube-music',
@@ -54,7 +61,7 @@ export default async function ArtistPage({
       id: button.id,
       text: button.text,
       url: button.url,
-      order: button.order,
+      style: 'primary', // Default style for custom buttons
     })),
     featuredItems: page.featuredItems.map(item => ({
       id: item.id,
@@ -70,11 +77,21 @@ export default async function ArtistPage({
       credits: track.credits || '',
       artworkUrl: track.artworkUrl || '',
       order: track.order,
+      spotifyUrl: (track as any).spotifyUrl || '',
+      appleMusicUrl: (track as any).appleMusicUrl || '',
+      beatportUrl: (track as any).beatportUrl || '',
+      youtubeUrl: (track as any).youtubeUrl || '',
+      youtubeMusicUrl: (track as any).youtubeMusicUrl || '',
+      soundcloudUrl: (track as any).soundcloudUrl || '',
     })),
     events: page.events.map(event => ({
       id: event.id,
       title: event.title,
-      date: event.date,
+      date: event.date ? new Date(event.date).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      }) : '',
       location: event.location || '',
       url: event.url || '',
       order: event.order,
@@ -82,14 +99,23 @@ export default async function ArtistPage({
     fullSets: page.fullSets.map(set => ({
       id: set.id,
       title: set.title,
-      url: set.url,
+      url: set.url || '',
+      thumbnailUrl: set.thumbnailUrl || '',
+      date: set.date || '',
+      location: set.location || '',
+      spotifyUrl: set.spotifyUrl || '',
+      appleMusicUrl: set.appleMusicUrl || '',
+      beatportUrl: set.beatportUrl || '',
+      youtubeUrl: set.youtubeUrl || '',
+      youtubeMusicUrl: set.youtubeMusicUrl || '',
+      soundcloudUrl: set.soundcloudUrl || '',
       order: set.order,
     })),
   };
 
   return (
     <div className={`min-h-screen ${page.themeMode === 'light' ? 'bg-white text-gray-900' : 'bg-gray-950 text-white'}`}>
-      <LandingPageContent data={landingData} />
+      <LandingPageContent data={landingData} themeColor={page.themeColor as 'cyan' | 'pink' | 'purple' | 'orange' | 'green'} />
     </div>
   );
 }

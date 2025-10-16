@@ -64,58 +64,58 @@ export const sampleLandingData = {
   events: [
     {
       id: 'event-1',
-      name: 'Discoteca',
-      venue: 'Unknown Location',
+      title: 'Discoteca',
       date: '16.02.2025',
-      time: '22:00'
+      location: 'Unknown Location',
+      url: 'https://example.com/event1'
     },
     {
       id: 'event-2',
-      name: 'Club Night',
-      venue: 'The Underground',
+      title: 'Club Night',
       date: '23.02.2025',
-      time: '21:00'
+      location: 'The Underground',
+      url: 'https://example.com/event2'
     },
     {
       id: 'event-3',
-      name: 'Festival Set',
-      venue: 'Music Festival Grounds',
+      title: 'Festival Set',
       date: '01.03.2025',
-      time: '20:00'
+      location: 'Music Festival Grounds',
+      url: 'https://example.com/event3'
     }
   ],
   fullSets: [
     {
       id: 'set-1',
-      name: 'Live at Club X',
+      title: 'Live at Club X',
+      url: 'https://example.com/set1',
       date: '15.01.2025',
       location: 'New York, NY',
-      thumbnailUrl: '/images/set-club-x.jpg',
-      badgeText: 'LIVE SET'
+      thumbnailUrl: '/images/set-club-x.jpg'
     },
     {
       id: 'set-2',
-      name: 'Festival Performance',
+      title: 'Festival Performance',
+      url: 'https://example.com/set2',
       date: '10.01.2025',
       location: 'Miami, FL',
-      thumbnailUrl: '/images/set-festival.jpg',
-      badgeText: 'DISCOTECA'
+      thumbnailUrl: '/images/set-festival.jpg'
     },
     {
       id: 'set-3',
-      name: 'Studio Session',
+      title: 'Studio Session',
+      url: 'https://example.com/set3',
       date: '05.01.2025',
       location: 'Los Angeles, CA',
-      thumbnailUrl: '/images/set-studio.jpg',
-      badgeText: 'LIVE SET'
+      thumbnailUrl: '/images/set-studio.jpg'
     },
     {
       id: 'set-4',
-      name: 'Radio Show',
+      title: 'Radio Show',
+      url: 'https://example.com/set4',
       date: '01.01.2025',
       location: 'Online',
-      thumbnailUrl: '/images/set-radio.jpg',
-      badgeText: 'DISCOTECA'
+      thumbnailUrl: '/images/set-radio.jpg'
     }
   ]
 };

@@ -85,7 +85,7 @@ export function CoverPhotoSection() {
               <input {...getInputProps()} />
               {preview ? (
                 <div className="relative aspect-[1350/1080] w-full">
-                  <Image src={preview} alt="Cover Photo" fill className="object-cover" />
+                  <Image src={preview} alt="Cover Photo" fill sizes="400px" className="object-cover" />
                   <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Button
                       type="button"

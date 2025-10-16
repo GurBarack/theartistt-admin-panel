@@ -13,6 +13,9 @@ export function FeaturedSection() {
   const { featuredItems, setFeaturedItems, setIsDraft } = usePageStore();
   const [hasChanges, setHasChanges] = useState(false);
 
+  // Safety check for featuredItems
+  const safeFeaturedItems = featuredItems || [];
+
   const handleAdd = () => {
     const newItem: FeaturedItem = {
       id: `temp-${Date.now()}`,
@@ -21,22 +24,22 @@ export function FeaturedSection() {
       subtitle: '',
       imageUrl: '',
       ctaUrl: '',
-      order: featuredItems.length,
+      order: safeFeaturedItems.length,
     };
-    setFeaturedItems([...featuredItems, newItem]);
+    setFeaturedItems([...safeFeaturedItems, newItem]);
     setHasChanges(true);
     setIsDraft(true);
   };
 
   const handleUpdate = (id: string, field: keyof FeaturedItem, value: string) => {
-    const newItems = featuredItems.map((item) => (item.id === id ? { ...item, [field]: value } : item));
+    const newItems = safeFeaturedItems.map((item) => (item.id === id ? { ...item, [field]: value } : item));
     setFeaturedItems(newItems);
     setHasChanges(true);
     setIsDraft(true);
   };
 
   const handleRemove = (id: string) => {
-    const newItems = featuredItems.filter((item) => item.id !== id);
+    const newItems = safeFeaturedItems.filter((item) => item.id !== id);
     setFeaturedItems(newItems);
     setHasChanges(true);
     setIsDraft(true);
@@ -54,10 +57,34 @@ export function FeaturedSection() {
     setIsDraft(false);
   };
 
-  const handleFileUpload = (itemId: string, file: File) => {
-    // Create a URL for the uploaded file
-    const imageUrl = URL.createObjectURL(file);
-    handleUpdate(itemId, 'imageUrl', imageUrl);
+  const handleFileUpload = async (itemId: string, file: File) => {
+    try {
+      // Convert file to base64
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64String = reader.result as string;
+        
+        // Upload to Vercel Blob
+        const response = await fetch('/api/blob/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            base64String,
+            filename: `featured-${itemId}-${Date.now()}.jpg`
+          }),
+        });
+        
+        if (response.ok) {
+          const { url } = await response.json();
+          handleUpdate(itemId, 'imageUrl', url);
+        } else {
+          console.error('Failed to upload image');
+        }
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
   };
 
   return (
@@ -68,7 +95,7 @@ export function FeaturedSection() {
         </AccordionTrigger>
         <AccordionContent className="px-6 pb-6">
           <div className="space-y-4">
-            {featuredItems.map((item, index) => (
+            {safeFeaturedItems.map((item, index) => (
               <div key={item.id} className="space-y-3 bg-gray-700/50 rounded-lg p-4">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-300">Featured Item {index + 1}</span>
@@ -82,13 +109,13 @@ export function FeaturedSection() {
                   </Button>
                 </div>
                 <Input
-                  value={item.title}
+                  value={item.title ?? ''}
                   onChange={(e) => handleUpdate(item.id, 'title', e.target.value)}
                   placeholder="Title"
                   className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
                 />
                 <Input
-                  value={item.subtitle || ''}
+                  value={item.subtitle ?? ''}
                   onChange={(e) => handleUpdate(item.id, 'subtitle', e.target.value)}
                   placeholder="Subtitle (optional)"
                   className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
@@ -96,15 +123,21 @@ export function FeaturedSection() {
                 <div className="space-y-2">
                   <label className="text-sm text-gray-300">Image</label>
                   <FileUpload
-                    onFileSelect={(file) => handleFileUpload(item.id, file)}
-                    currentImageUrl={item.imageUrl}
+                    onFileSelect={(file) => {
+                      if (file === null) {
+                        handleUpdate(item.id, 'imageUrl', '');
+                      } else {
+                        handleFileUpload(item.id, file);
+                      }
+                    }}
+                    currentImageUrl={item.imageUrl || undefined}
                     placeholder="Upload image"
                     aspectRatio="aspect-video"
                     className="w-full h-48"
                   />
                 </div>
                 <Input
-                  value={item.ctaUrl || ''}
+                  value={item.ctaUrl ?? ''}
                   onChange={(e) => handleUpdate(item.id, 'ctaUrl', e.target.value)}
                   placeholder="CTA URL (optional)"
                   className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"

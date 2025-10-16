@@ -84,6 +84,18 @@ export function HeroSection({
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 sm:mb-8 drop-shadow-2xl">
           {displayName || 'Artist Name'}
         </h1>
+        
+        {/* Theme Color Indicator - For Testing */}
+        <div className={`inline-block px-4 py-2 rounded-full text-sm font-semibold mb-4 ${
+          themeColor === 'cyan' ? 'bg-cyan-400 text-gray-900' :
+          themeColor === 'pink' ? 'bg-pink-400 text-gray-900' :
+          themeColor === 'purple' ? 'bg-purple-400 text-gray-900' :
+          themeColor === 'orange' ? 'bg-orange-400 text-gray-900' :
+          themeColor === 'green' ? 'bg-green-400 text-gray-900' :
+          'bg-gray-400 text-gray-900'
+        }`}>
+          Theme: {themeColor || 'default'}
+        </div>
 
         {/* Platform Links - Row 1 */}
         {row1Links.length > 0 && (

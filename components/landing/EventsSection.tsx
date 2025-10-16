@@ -4,16 +4,16 @@ import { Calendar, MapPin, Clock, ArrowRight, ChevronRight } from 'lucide-react'
 
 interface Event {
   id: string;
-  name: string;
-  venue: string;
-  date: string; // "16.02.2025"
-  time: string; // "22:00"
+  title: string;
+  date: string;
+  location?: string;
+  url?: string;
 }
 
 interface EventsSectionProps {
   events: Event[];
   onSeeAll: () => void;
-  onEventClick: (eventId: string) => void;
+  onEventClick: (url?: string) => void;
 }
 
 export function EventsSection({ events, onSeeAll, onEventClick }: EventsSectionProps) {
@@ -32,10 +32,10 @@ export function EventsSection({ events, onSeeAll, onEventClick }: EventsSectionP
 
       {/* Events List */}
       <div className="space-y-3">
-        {events.slice(0, 3).map((event) => (
+        {events.slice(0, 4).map((event) => (
           <div
             key={event.id}
-            onClick={() => onEventClick(event.id)}
+            onClick={() => onEventClick(event.url)}
             className="bg-gray-900 rounded-3xl p-5 border border-gray-800 flex items-center gap-6 cursor-pointer hover:bg-gray-800 transition-all"
           >
             {/* Date Section */}
@@ -46,15 +46,13 @@ export function EventsSection({ events, onSeeAll, onEventClick }: EventsSectionP
 
             {/* Event Details */}
             <div className="flex-1">
-              <h3 className="text-white text-xl font-bold mb-2">{event.name}</h3>
-              <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
-                <MapPin className="w-4 h-4" />
-                <span>{event.venue}</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-400 text-sm">
-                <Clock className="w-4 h-4" />
-                <span>{event.time}</span>
-              </div>
+              <h3 className="text-white text-xl font-bold mb-2">{event.title}</h3>
+              {event.location && (
+                <div className="flex items-center gap-2 text-gray-400 text-sm">
+                  <MapPin className="w-4 h-4" />
+                  <span>{event.location}</span>
+                </div>
+              )}
             </div>
 
             {/* Arrow Button */}

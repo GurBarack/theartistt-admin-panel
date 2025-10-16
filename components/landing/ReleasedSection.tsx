@@ -1,23 +1,31 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { Play, ChevronRight } from 'lucide-react';
-
-interface Track {
-  id: string;
-  name: string;
-  credits?: string;
-  artworkUrl: string;
-  order: number;
-}
+import { TrackModal } from './TrackModal';
+import { Track } from '@/types';
 
 interface ReleasedSectionProps {
-  tracks: Track[];
+  tracks: Array<{
+    id: string;
+    name: string;
+    credits?: string;
+    artworkUrl: string;
+    order: number;
+    spotifyUrl?: string;
+    appleMusicUrl?: string;
+    beatportUrl?: string;
+    youtubeUrl?: string;
+    youtubeMusicUrl?: string;
+    soundcloudUrl?: string;
+  }>;
   onSeeAll: () => void;
-  onTrackClick: (trackId: string) => void;
 }
 
-export function ReleasedSection({ tracks, onSeeAll, onTrackClick }: ReleasedSectionProps) {
+export function ReleasedSection({ tracks, onSeeAll }: ReleasedSectionProps) {
+  const [selectedTrack, setSelectedTrack] = useState<ReleasedSectionProps['tracks'][0] | null>(null);
+
   return (
     <section className="py-6 sm:py-8 px-4 sm:px-6 bg-gray-950">
       {/* Header */}
@@ -39,7 +47,7 @@ export function ReleasedSection({ tracks, onSeeAll, onTrackClick }: ReleasedSect
           .map((track) => (
           <div
             key={track.id}
-            onClick={() => onTrackClick(track.id)}
+            onClick={() => setSelectedTrack(track)}
             className="bg-gray-900/50 backdrop-blur rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-gray-800 flex items-center gap-3 sm:gap-4 cursor-pointer hover:bg-gray-800/50 transition-all"
           >
             {/* Album Artwork */}
@@ -49,6 +57,7 @@ export function ReleasedSection({ tracks, onSeeAll, onTrackClick }: ReleasedSect
                   src={track.artworkUrl}
                   alt={track.name || 'Track artwork'}
                   fill
+                  sizes="80px"
                   className="rounded-lg sm:rounded-xl object-cover"
                   onError={(e) => {
                     // Hide the image and show fallback
@@ -76,6 +85,13 @@ export function ReleasedSection({ tracks, onSeeAll, onTrackClick }: ReleasedSect
           </div>
         ))}
       </div>
+
+      {/* Track Modal */}
+      <TrackModal
+        track={selectedTrack}
+        isOpen={!!selectedTrack}
+        onClose={() => setSelectedTrack(null)}
+      />
     </section>
   );
 }

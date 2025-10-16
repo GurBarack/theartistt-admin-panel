@@ -13,7 +13,7 @@ interface SortableTrackItemProps {
   index: number;
   onUpdate: (id: string, field: keyof Track, value: string) => void;
   onRemove: (id: string) => void;
-  onFileUpload: (trackId: string, file: File) => void;
+  onFileUpload: (trackId: string, file: File | null) => void;
 }
 
 export function SortableTrackItem({ 
@@ -86,34 +86,71 @@ export function SortableTrackItem({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        <Input
-          value={track.spotifyUrl || ''}
-          onChange={(e) => onUpdate(track.id, 'spotifyUrl', e.target.value)}
-          placeholder="Spotify URL"
-          className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-        />
-        <Input
-          value={track.appleMusicUrl || ''}
-          onChange={(e) => onUpdate(track.id, 'appleMusicUrl', e.target.value)}
-          placeholder="Apple Music URL"
-          className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-        />
-      </div>
+      <div className="space-y-2">
+        <label className="text-sm text-gray-300">Platform Links (Optional)</label>
+        
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="text-xs text-gray-400 mb-1 block">Spotify</label>
+            <Input
+              value={track.spotifyUrl ?? ''}
+              onChange={(e) => onUpdate(track.id, 'spotifyUrl', e.target.value)}
+              placeholder="Spotify URL"
+              className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-gray-400 mb-1 block">Apple Music</label>
+            <Input
+              value={track.appleMusicUrl ?? ''}
+              onChange={(e) => onUpdate(track.id, 'appleMusicUrl', e.target.value)}
+              placeholder="Apple Music URL"
+              className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+            />
+          </div>
+        </div>
 
-      <div className="grid grid-cols-2 gap-2">
-        <Input
-          value={track.soundcloudUrl || ''}
-          onChange={(e) => onUpdate(track.id, 'soundcloudUrl', e.target.value)}
-          placeholder="SoundCloud URL"
-          className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-        />
-        <Input
-          value={track.youtubeUrl || ''}
-          onChange={(e) => onUpdate(track.id, 'youtubeUrl', e.target.value)}
-          placeholder="YouTube URL"
-          className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-        />
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="text-xs text-gray-400 mb-1 block">Beatport</label>
+            <Input
+              value={track.beatportUrl ?? ''}
+              onChange={(e) => onUpdate(track.id, 'beatportUrl', e.target.value)}
+              placeholder="Beatport URL"
+              className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-gray-400 mb-1 block">YouTube</label>
+            <Input
+              value={track.youtubeUrl ?? ''}
+              onChange={(e) => onUpdate(track.id, 'youtubeUrl', e.target.value)}
+              placeholder="YouTube URL"
+              className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="text-xs text-gray-400 mb-1 block">YouTube Music</label>
+            <Input
+              value={track.youtubeMusicUrl ?? ''}
+              onChange={(e) => onUpdate(track.id, 'youtubeMusicUrl', e.target.value)}
+              placeholder="YouTube Music URL"
+              className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-gray-400 mb-1 block">SoundCloud</label>
+            <Input
+              value={track.soundcloudUrl ?? ''}
+              onChange={(e) => onUpdate(track.id, 'soundcloudUrl', e.target.value)}
+              placeholder="SoundCloud URL"
+              className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

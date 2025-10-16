@@ -1,11 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import { HeroSection } from './HeroSection';
 import { ContentTabs } from './ContentTabs';
 import { FeaturedSection } from './FeaturedSection';
 import { ReleasedSection } from './ReleasedSection';
 import { EventsSection } from './EventsSection';
 import { FullSetsSection } from './FullSetsSection';
+import { SeeAllModal } from './SeeAllModal';
+import { TrackModal } from './TrackModal';
+import { FullSetModal } from './FullSetModal';
 
 interface LandingPageData {
   // Hero Section Data
@@ -30,21 +34,33 @@ interface LandingPageData {
     credits?: string;
     artworkUrl: string;
     order: number;
+    spotifyUrl?: string;
+    appleMusicUrl?: string;
+    beatportUrl?: string;
+    youtubeUrl?: string;
+    youtubeMusicUrl?: string;
+    soundcloudUrl?: string;
   }>;
   events: Array<{
     id: string;
-    name: string;
-    venue: string;
+    title: string;
     date: string;
-    time: string;
+    location?: string;
+    url?: string;
   }>;
   fullSets: Array<{
     id: string;
-    name: string;
-    date: string;
+    title: string;
+    url: string;
+    thumbnailUrl?: string;
+    date?: string;
     location?: string;
-    thumbnailUrl: string;
-    badgeText?: string;
+    spotifyUrl?: string;
+    appleMusicUrl?: string;
+    beatportUrl?: string;
+    youtubeUrl?: string;
+    youtubeMusicUrl?: string;
+    soundcloudUrl?: string;
   }>;
 }
 
@@ -69,14 +85,11 @@ export function LandingPageContent({ data, themeColor }: LandingPageContentProps
     // TODO: Open featured item modal or navigate
   };
 
-  const handleTrackClick = (id: string) => {
-    console.log('Track clicked:', id);
-    // TODO: Open track modal or play track
-  };
 
-  const handleEventClick = (id: string) => {
-    console.log('Event clicked:', id);
-    // TODO: Open event detail modal
+  const handleEventClick = (url?: string) => {
+    if (url && url.trim() !== '') {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
   };
 
   const handleSetClick = (id: string) => {
@@ -84,20 +97,70 @@ export function LandingPageContent({ data, themeColor }: LandingPageContentProps
     // TODO: Open full set modal or play set
   };
 
-  const handleSeeAllTracks = () => {
-    console.log('See all tracks');
-    // TODO: Navigate to full tracks page
+  // State for See All modals
+  const [seeAllType, setSeeAllType] = useState<'tracks' | 'events' | 'fullSets' | null>(null);
+
+  // State for detail modals opened from See All
+  const [detailTrack, setDetailTrack] = useState<{
+    id: string;
+    name: string;
+    credits?: string;
+    artworkUrl: string;
+    order: number;
+    spotifyUrl?: string;
+    appleMusicUrl?: string;
+    beatportUrl?: string;
+    youtubeUrl?: string;
+    youtubeMusicUrl?: string;
+    soundcloudUrl?: string;
+  } | null>(null);
+  const [detailFullSet, setDetailFullSet] = useState<{
+    id: string;
+    title: string;
+    url: string;
+    thumbnailUrl?: string;
+    date?: string;
+    location?: string;
+    spotifyUrl?: string;
+    appleMusicUrl?: string;
+    beatportUrl?: string;
+    youtubeUrl?: string;
+    youtubeMusicUrl?: string;
+    soundcloudUrl?: string;
+  } | null>(null);
+
+  // Handlers for See All buttons
+  const handleTracksSeeAll = () => setSeeAllType('tracks');
+  const handleEventsSeeAll = () => setSeeAllType('events');
+  const handleFullSetsSeeAll = () => setSeeAllType('fullSets');
+
+  // Handler for clicking items in See All modal
+  const handleSeeAllItemClick = (type: string, item: any) => {
+    if (type === 'tracks') {
+      setSeeAllType(null); // Close See All modal
+      setDetailTrack(item); // Open track detail modal
+    } else if (type === 'events') {
+      if (item.url && item.url.trim() !== '') {
+        window.open(item.url, '_blank', 'noopener,noreferrer');
+        setSeeAllType(null); // Close modal after opening URL
+      }
+    } else if (type === 'fullSets') {
+      setSeeAllType(null); // Close See All modal
+      setDetailFullSet(item); // Open full set detail modal
+    }
   };
 
-  const handleSeeAllEvents = () => {
-    console.log('See all events');
-    // TODO: Navigate to full events page
+  // Handler for back button in detail modals
+  const handleBackToSeeAll = (type: 'tracks' | 'fullSets') => {
+    if (type === 'tracks') {
+      setDetailTrack(null);
+      setSeeAllType('tracks');
+    } else if (type === 'fullSets') {
+      setDetailFullSet(null);
+      setSeeAllType('fullSets');
+    }
   };
 
-  const handleSeeAllSets = () => {
-    console.log('See all sets');
-    // TODO: Navigate to full sets page
-  };
 
   return (
     <div 
@@ -133,23 +196,54 @@ export function LandingPageContent({ data, themeColor }: LandingPageContentProps
       <div id="released">
         <ReleasedSection
           tracks={data.tracks}
-          onSeeAll={handleSeeAllTracks}
-          onTrackClick={handleTrackClick}
+          onSeeAll={handleTracksSeeAll}
         />
       </div>
 
       <div id="events">
         <EventsSection
           events={data.events}
-          onSeeAll={handleSeeAllEvents}
+          onSeeAll={handleEventsSeeAll}
           onEventClick={handleEventClick}
         />
       </div>
 
-      <FullSetsSection
-        sets={data.fullSets}
-        onSeeAll={handleSeeAllSets}
-        onCardClick={handleSetClick}
+      <div id="fullsets">
+        <FullSetsSection
+          sets={data.fullSets}
+          onSeeAll={handleFullSetsSeeAll}
+          onCardClick={handleSetClick}
+        />
+      </div>
+
+      {/* See All Modal */}
+      <SeeAllModal
+        type={seeAllType}
+        items={
+          seeAllType === 'tracks' ? data.tracks :
+          seeAllType === 'events' ? data.events :
+          seeAllType === 'fullSets' ? data.fullSets : []
+        }
+        isOpen={!!seeAllType}
+        onClose={() => setSeeAllType(null)}
+        onItemClick={handleSeeAllItemClick}
+      />
+
+      {/* Detail modals opened from See All (with back button) */}
+      <TrackModal
+        track={detailTrack}
+        isOpen={!!detailTrack}
+        onClose={() => setDetailTrack(null)}
+        showBackButton={true}
+        onBack={() => handleBackToSeeAll('tracks')}
+      />
+
+      <FullSetModal
+        fullSet={detailFullSet}
+        isOpen={!!detailFullSet}
+        onClose={() => setDetailFullSet(null)}
+        showBackButton={true}
+        onBack={() => handleBackToSeeAll('fullSets')}
       />
     </div>
   );

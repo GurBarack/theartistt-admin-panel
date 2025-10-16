@@ -1,4 +1,4 @@
-import speakeasy from 'speakeasy';
+// import speakeasy from 'speakeasy';
 import * as nodemailer from 'nodemailer';
 import { prisma } from './prisma';
 

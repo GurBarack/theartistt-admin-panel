@@ -63,10 +63,40 @@ export function TracksSection() {
     setIsDraft(false);
   };
 
-  const handleFileUpload = (trackId: string, file: File) => {
-    // Create a URL for the uploaded file
-    const imageUrl = URL.createObjectURL(file);
-    handleUpdate(trackId, 'artworkUrl', imageUrl);
+  const handleFileUpload = async (trackId: string, file: File | null) => {
+    if (file === null) {
+      // Handle deletion
+      handleUpdate(trackId, 'artworkUrl', '');
+      return;
+    }
+
+    try {
+      // Convert file to base64
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64String = reader.result as string;
+        
+        // Upload to Vercel Blob
+        const response = await fetch('/api/blob/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            base64String,
+            filename: `track-${trackId}-${Date.now()}.jpg`
+          }),
+        });
+        
+        if (response.ok) {
+          const { url } = await response.json();
+          handleUpdate(trackId, 'artworkUrl', url);
+        } else {
+          console.error('Failed to upload image');
+        }
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
   };
 
   const handleDragEnd = (event: DragEndEvent) => {

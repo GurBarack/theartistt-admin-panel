@@ -70,23 +70,21 @@ export interface Track {
 export interface Event {
   id: string;
   pageId: string;
-  name: string;
-  venue: string;
-  location?: string;
+  title: string;
   date: string;
-  time: string;
-  ticketUrl?: string;
+  location?: string;
+  url?: string;
   order: number;
 }
 
 export interface FullSet {
   id: string;
   pageId: string;
-  name: string;
-  date: string;
+  title: string;
+  url: string;
+  thumbnailUrl?: string;
+  date?: string;
   location?: string;
-  thumbnailUrl: string;
-  badgeText?: string;
   spotifyUrl?: string;
   appleMusicUrl?: string;
   beatportUrl?: string;

@@ -222,7 +222,21 @@ export const usePageStore = create<PageState>()(
     set({ isLoading: true });
     try {
       const state = usePageStore.getState();
-      if (!state.page) return false;
+      if (!state.page) {
+        console.log('❌ Save - No page data found');
+        return false;
+      }
+
+      console.log('💾 Save - Saving page data:', {
+        pageId: state.page.id,
+        displayName: state.page.displayName,
+        themeColor: state.page.themeColor,
+        themeMode: state.page.themeMode,
+        featuredItemsCount: state.featuredItems?.length || 0,
+        tracksCount: state.tracks?.length || 0,
+        linksCount: state.links?.length || 0,
+        socialLinksCount: state.socialLinks?.length || 0,
+      });
 
       const pageData = {
         id: state.page.id,

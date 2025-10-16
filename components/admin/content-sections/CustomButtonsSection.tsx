@@ -89,14 +89,14 @@ export function CustomButtonsSection() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <Input
-                    value={button.text}
+                    value={button.text ?? ''}
                     onChange={(e) => handleUpdate(button.id, 'text', e.target.value)}
                     placeholder="Or type custom text"
                     className="flex-1 bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
                   />
                 </div>
                 <Input
-                  value={button.url}
+                  value={button.url ?? ''}
                   onChange={(e) => handleUpdate(button.id, 'url', e.target.value)}
                   placeholder="Enter URL"
                   className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"

@@ -38,7 +38,7 @@ export function Step4Visual() {
       {/* Header */}
       <div className="text-center">
         <div className="text-5xl mb-4">🎨</div>
-        <h2 className="text-3xl font-bold text-white mb-2">Let's design your page</h2>
+        <h2 className="text-3xl font-bold text-white mb-2">Let&apos;s design your page</h2>
         <p className="text-gray-400">Choose your vibe</p>
       </div>
 

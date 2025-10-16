@@ -59,7 +59,6 @@ export function MobilePreview() {
             <ReleasedSection
               tracks={tracks}
               onSeeAll={() => {}}
-              onTrackClick={() => {}}
             />
           </div>
 

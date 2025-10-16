@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Plus, Trash2 } from 'lucide-react';
 import { usePageStore } from '@/stores/pageStore';
 import { Event } from '@/types';
@@ -16,12 +17,10 @@ export function EventsSection() {
     const newEvent: Event = {
       id: `temp-${Date.now()}`,
       pageId: '',
-      name: '',
-      venue: '',
+      title: '',
       location: '',
       date: '',
-      time: '',
-      ticketUrl: '',
+      url: '',
       order: events.length,
     };
     setEvents([...events, newEvent]);
@@ -77,41 +76,27 @@ export function EventsSection() {
                   </Button>
                 </div>
                 <Input
-                  value={event.name}
-                  onChange={(e) => handleUpdate(event.id, 'name', e.target.value)}
+                  value={event.title ?? ''}
+                  onChange={(e) => handleUpdate(event.id, 'title', e.target.value)}
                   placeholder="Event name"
                   className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
                 />
                 <Input
-                  value={event.venue}
-                  onChange={(e) => handleUpdate(event.id, 'venue', e.target.value)}
-                  placeholder="Venue"
-                  className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-                />
-                <Input
-                  value={event.location || ''}
+                  value={event.location ?? ''}
                   onChange={(e) => handleUpdate(event.id, 'location', e.target.value)}
                   placeholder="Location (optional)"
                   className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
                 />
-                <div className="grid grid-cols-2 gap-2">
-                  <Input
-                    value={event.date}
-                    onChange={(e) => handleUpdate(event.id, 'date', e.target.value)}
-                    placeholder="Date (YYYY-MM-DD)"
-                    className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-                  />
-                  <Input
-                    value={event.time}
-                    onChange={(e) => handleUpdate(event.id, 'time', e.target.value)}
-                    placeholder="Time (HH:MM)"
-                    className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
-                  />
-                </div>
+                <DatePicker
+                  value={event.date}
+                  onChange={(value) => handleUpdate(event.id, 'date', value)}
+                  placeholder="Select date"
+                  className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
+                />
                 <Input
-                  value={event.ticketUrl || ''}
-                  onChange={(e) => handleUpdate(event.id, 'ticketUrl', e.target.value)}
-                  placeholder="Ticket URL (optional)"
+                  value={event.url ?? ''}
+                  onChange={(e) => handleUpdate(event.id, 'url', e.target.value)}
+                  placeholder="Event URL (optional)"
                   className="bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"
                 />
               </div>

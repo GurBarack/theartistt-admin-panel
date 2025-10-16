@@ -11,7 +11,7 @@ export default function VerifyRequestPage() {
           <div className="text-6xl mb-6">📧</div>
           <h1 className="text-3xl font-bold text-white mb-4">Check Your Email</h1>
           <p className="text-gray-400 mb-6">
-            We've sent you a magic link to sign in to your account.
+            We&apos;ve sent you a magic link to sign in to your account.
           </p>
           <p className="text-sm text-gray-500 mb-8">
             Click the link in the email to continue. The link will expire in 24 hours.

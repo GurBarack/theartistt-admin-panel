@@ -67,7 +67,7 @@ export function SocialLinksSection() {
                   <img src={platform.icon} alt={platform.name} width={24} height={24} className="w-6 h-6" />
                   <span className="text-white font-medium w-24">{platform.name}</span>
                   <Input
-                    value={link?.url || ''}
+                    value={link?.url ?? ''}
                     onChange={(e) => handleUpdate(platform.id, e.target.value)}
                     placeholder={`Enter ${platform.name} URL`}
                     className="flex-1 bg-gray-900 border-gray-600 text-white placeholder:text-gray-500"

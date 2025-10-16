@@ -42,7 +42,7 @@ export default function SignInPage() {
             <div className="text-6xl mb-6">📧</div>
             <h1 className="text-3xl font-bold text-white mb-4">Check Your Email</h1>
             <p className="text-gray-400 mb-6">
-              We've sent a magic link to <strong className="text-cyan-400">{email}</strong>
+              We&apos;ve sent a magic link to <strong className="text-cyan-400">{email}</strong>
             </p>
             <p className="text-sm text-gray-500 mb-6">
               Click the link in the email to sign in to your account.

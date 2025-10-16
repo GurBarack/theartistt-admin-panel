@@ -33,7 +33,7 @@ export function Step3Platforms() {
   const { data, updateData, nextStep, prevStep } = useOnboardingStore();
   const [connecting, setConnecting] = useState<string | null>(null);
 
-  const handleConnect = async (platformId: string, authUrl: string) => {
+  const handleConnect = async (platformId: string, _authUrl: string) => {
     setConnecting(platformId);
     
     // For now, simulate connection (replace with real OAuth later)
@@ -67,9 +67,9 @@ export function Step3Platforms() {
       {/* Header */}
       <div className="text-center">
         <div className="text-5xl mb-4">🔗</div>
-        <h2 className="text-3xl font-bold text-white mb-2">Where's Your Music?</h2>
+        <h2 className="text-3xl font-bold text-white mb-2">Where&apos;s Your Music?</h2>
         <p className="text-gray-400">
-          We'll automatically import your tracks and keep them synced
+          We&apos;ll automatically import your tracks and keep them synced
         </p>
       </div>
 
@@ -140,7 +140,7 @@ export function Step3Platforms() {
       {/* Info Box */}
       <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4">
         <p className="text-purple-400 text-sm">
-          ⚡ <strong>Pro tip:</strong> Connect at least one platform now. We'll automatically
+          ⚡ <strong>Pro tip:</strong> Connect at least one platform now. We&apos;ll automatically
           import your latest tracks and you can manage them later.
         </p>
       </div>

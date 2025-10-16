@@ -65,17 +65,20 @@ export function FeaturedSection({ items, accentColor, onItemClick }: FeaturedSec
       </div>
 
       {/* Single Item - 100% Width */}
-      {isSingleItem && (
+      {isSingleItem && items[0] && (
         <div
           onClick={() => onItemClick(items[0].id)}
           className="relative h-[400px] w-full rounded-3xl overflow-hidden border border-gray-800 cursor-pointer hover:border-gray-700 transition-all group"
         >
-          <Image
-            src={items[0].imageUrl}
-            alt={items[0].title || 'Featured item'}
-            fill
-            className="object-cover"
-          />
+          {items[0].imageUrl && (
+            <Image
+              src={items[0].imageUrl}
+              alt={items[0].title || 'Featured item'}
+              fill
+              sizes="100vw"
+              className="object-cover"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/95" />
           
           <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
@@ -113,12 +116,15 @@ export function FeaturedSection({ items, accentColor, onItemClick }: FeaturedSec
                 marginRight: index === items.length - 1 ? '24px' : '0',
               }}
             >
-              <Image
-                src={item.imageUrl}
-                alt={item.title || 'Featured item'}
-                fill
-                className="object-cover"
-              />
+              {item.imageUrl && (
+                <Image
+                  src={item.imageUrl}
+                  alt={item.title || 'Featured item'}
+                  fill
+                  sizes="280px"
+                  className="object-cover"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/95" />
               
               <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">

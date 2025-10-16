@@ -15,8 +15,12 @@ export function ColorPicker() {
 
   const handleColorChange = (color: typeof COLORS[number]['id']) => {
     if (page) {
+      console.log('🎨 ColorPicker - Changing theme color from', page.themeColor, 'to', color);
       setPage({ ...page, themeColor: color });
       setIsDraft(true);
+      console.log('🎨 ColorPicker - Page state updated, isDraft set to true');
+    } else {
+      console.log('❌ ColorPicker - No page data found');
     }
   };
 

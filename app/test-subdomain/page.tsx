@@ -40,7 +40,7 @@ export default function TestSubdomainPage() {
                 <div className="bg-gray-700 p-4 rounded">
                   <code className="text-green-400">
                     Direct access: http://localhost:3001/artist/gurba<br/>
-                    This works but doesn't test subdomain routing
+                    This works but doesn&apos;t test subdomain routing
                   </code>
                 </div>
               </div>

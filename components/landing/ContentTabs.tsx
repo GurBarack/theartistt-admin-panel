@@ -12,6 +12,7 @@ const TABS = [
   { id: 'featured', label: 'Featured' },
   { id: 'released', label: 'Released' },
   { id: 'events', label: 'Events' },
+  { id: 'fullsets', label: 'Full Sets' },
 ];
 
 const THEME_COLORS = {
@@ -30,7 +31,7 @@ export function ContentTabs({ themeMode, accentColor }: ContentTabsProps) {
   // Scroll-based active tab detection
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['featured', 'released', 'events'];
+      const sections = ['featured', 'released', 'events', 'fullsets'];
       const scrollPosition = window.scrollY + 250;
 
       for (const sectionId of sections) {

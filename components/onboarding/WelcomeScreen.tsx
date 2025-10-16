@@ -59,7 +59,7 @@ export function WelcomeScreen() {
           size="lg"
           className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white text-xl px-12 py-6 rounded-full"
         >
-          Let's Begin →
+          Let&apos;s Begin →
         </Button>
         <p className="text-gray-500 text-sm mt-4">
           Takes about 5 minutes • No credit card required

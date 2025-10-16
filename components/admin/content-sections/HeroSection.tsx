@@ -14,8 +14,8 @@ import 'react-image-crop/dist/ReactCrop.css';
 
 export function HeroSection() {
   const { page, setPage, setIsDraft } = usePageStore();
-  const [artistName, setArtistName] = useState(page?.displayName || '');
-  const [slug, setSlug] = useState(page?.slug || '');
+  const [artistName, setArtistName] = useState(page?.displayName ?? '');
+  const [slug, setSlug] = useState(page?.slug ?? '');
   const [preview, setPreview] = useState<string | null>(page?.coverPhotoUrl || null);
   const [showCrop, setShowCrop] = useState(false);
   const [crop, setCrop] = useState<CropType>();
@@ -24,8 +24,8 @@ export function HeroSection() {
   // Update local state when page data loads
   useEffect(() => {
     if (page) {
-      setArtistName(page.displayName || '');
-      setSlug(page.slug || '');
+      setArtistName(page.displayName ?? '');
+      setSlug(page.slug ?? '');
       setPreview(page.coverPhotoUrl || null);
     }
   }, [page]);
@@ -76,8 +76,8 @@ export function HeroSection() {
   });
 
   const handleDiscard = () => {
-    setArtistName(page?.displayName || '');
-    setSlug(page?.slug || '');
+    setArtistName(page?.displayName ?? '');
+    setSlug(page?.slug ?? '');
     setPreview(page?.coverPhotoUrl || null);
     setShowCrop(false);
     setHasChanges(false);
@@ -179,7 +179,7 @@ export function HeroSection() {
                   <input {...getInputProps()} />
                   {preview && !showCrop ? (
                     <div className="relative aspect-[1350/1080] w-full">
-                      <Image src={preview} alt="Cover Photo" fill className="object-cover" />
+                      <Image src={preview} alt="Cover Photo" fill sizes="400px" className="object-cover" />
                       <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <Button
                           type="button"

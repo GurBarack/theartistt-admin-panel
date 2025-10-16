@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useOnboardingStore } from '@/stores/onboardingStore';
-import { Check, Copy, Share2, QrCode } from 'lucide-react';
+import { Copy, Share2, QrCode } from 'lucide-react';
 
 export function Step5Review() {
-  const { data, updateData, nextStep, prevStep, completeOnboarding } = useOnboardingStore();
+  const { data, updateData, prevStep, completeOnboarding } = useOnboardingStore();
   const [socialLinks, setSocialLinks] = useState(data.socialLinks);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
@@ -118,7 +118,7 @@ export function Step5Review() {
 
         {/* Next Steps */}
         <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-700 text-left">
-          <h3 className="text-white font-bold mb-3">What's next?</h3>
+          <h3 className="text-white font-bold mb-3">What&apos;s next?</h3>
           <ul className="space-y-2 text-gray-400 text-sm">
             <li>• Add upcoming shows and events</li>
             <li>• Upload more tracks manually</li>
@@ -153,8 +153,8 @@ export function Step5Review() {
       {/* Header */}
       <div className="text-center">
         <div className="text-5xl mb-4">🚀</div>
-        <h2 className="text-3xl font-bold text-white mb-2">You're almost there!</h2>
-        <p className="text-gray-400">Here's a preview of your page</p>
+        <h2 className="text-3xl font-bold text-white mb-2">You&apos;re almost there!</h2>
+        <p className="text-gray-400">Here&apos;s a preview of your page</p>
       </div>
 
       {/* Page Preview */}
