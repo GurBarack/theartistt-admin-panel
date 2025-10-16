@@ -34,7 +34,7 @@ export default async function ArtistPage({
 
   // Convert database data to landing page format
   const landingData = {
-    artistName: page.displayName,
+    displayName: page.displayName,
     coverPhotoUrl: page.coverPhotoUrl || '',
     themeColor: page.themeColor,
     themeMode: page.themeMode,
