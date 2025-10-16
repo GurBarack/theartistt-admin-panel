@@ -96,4 +96,4 @@ types/
 - User authentication
 - Multiple page management
 - Analytics dashboard
-- Export functionality
+- Export functionality# Force Vercel deployment with latest fixes
