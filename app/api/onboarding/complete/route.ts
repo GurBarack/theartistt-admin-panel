@@ -8,7 +8,9 @@ export async function POST(req: NextRequest) {
       email: body.email, 
       name: body.name, 
       artistName: body.artistName, 
-      subdomain: body.subdomain 
+      subdomain: body.subdomain,
+      genre: body.genre,
+      bio: body.bio
     });
     
     const { 
@@ -63,7 +65,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Create the page
-    console.log('🔄 Creating page for user:', user.id, 'with subdomain:', subdomain);
+    console.log('🔄 Creating page for user:', user.id, 'with subdomain:', subdomain, 'artistName:', artistName);
     const page = await prisma.page.create({
       data: {
         userId: user.id,
@@ -77,7 +79,7 @@ export async function POST(req: NextRequest) {
         isPublished: true,
       },
     });
-    console.log('✅ Page created successfully:', page.id);
+    console.log('✅ Page created successfully:', page.id, 'displayName:', page.displayName, 'slug:', page.slug);
 
     // Create social links
     if (socialLinks) {

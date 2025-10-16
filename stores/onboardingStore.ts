@@ -92,7 +92,7 @@ export const useOnboardingStore = create<OnboardingState>()(
             email: '',
             name: '',
             artistName: '',
-            slug: '',
+            subdomain: '',
             genre: '',
             bio: '',
             connectedPlatforms: {},
